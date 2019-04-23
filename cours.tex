@@ -1,0 +1,156 @@
+\input{preambule.tex}
+
+\title{Processus Stochastiques}
+\author{Olivier DULCY}
+\date{}
+
+\fancypagestyle{theme}{
+\fancyhead[L]{Olivier DULCY}
+\fancyhead[R]{}
+\fancyhead[C]{}
+\fancyfoot[C]{\thepage}
+\fancyfoot[R]{}
+\fancyfoot[L]{Télécom SudParis 2018-2019}
+\renewcommand{\footrulewidth}{1pt}
+\renewcommand{\headrulewidth}{1pt}}
+
+\fancypagestyle{garde}{
+\fancyhead[L]{}
+\fancyhead[C]{}
+\fancyhead[R]{}
+\fancyfoot[C]{}
+\fancyfoot[R]{Olivier DULCY}
+\fancyfoot[L]{}
+\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\headrulewidth}{0pt}}
+
+\pagestyle{theme}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newcommand\tikzmark[2][]{
+  \tikz[remember picture,inner sep=\tabcolsep,outer sep=0,baseline=(#1.base),align=left]{\node[minimum width=\hsize](#1){$#2$};}
+}
+
+\begin{document}
+\maketitle
+
+\frontmatter
+
+\mainmatter
+
+\chapter{Théorème de Kolmogorov}
+
+$\B(\R^d)$ désigne la tribu borélienne de $\R^d$. \\
+
+\Def Un processus stochastique X est la donnée de $\{X_t; 0\leq t < +\infty\}$, où à $t$ fixé, $X_t$ est une variable aléatoire définie sur $(\Omega,\F)$ à valeurs dans $(\R^d,\B(\R^d))$.
+\chapter{Mouvement brownien et calcul différentiel stochastique}
+\section{Mouvement brownien}
+
+\Def Soit $X$ un mouvement brownien. On dit que le mouvement est de Markov si $\forall t_1,\ldots,t_n$, $p(x_{t_n}\vert x_{t_1}, \ldots, x_{t_n}) = p(x_n \vert x_{t_{n-1}})$.
+
+\Prop $p(b\vert a) \sim \Normale(m_b + C^T A^{-1}(a-m_a), B - C^T A^{-1} C)$ où 
+$
+\begin{pmatrix}
+A & C \\
+C^T & B
+\end{pmatrix}
+$
+
+\Q1 Montrer que $p(x_{t_n} \vert x_{t_{n-1}}, x_{t_{n-2}}) = p(x_{t_n} \vert x_{t_{n-1}})$
+
+\Rq Cela veut dire que $p(u\vert v,w) = p(u \vert v) \Leftrightarrow p(u,w\vert v) = p(u\vert v)p(w \vert v)$
+
+Montrons alors que $p(x_{t_n},x_{t_{n-2}} \vert x_{t_{n-1}}) = p(x_{t_n}\vert x_{t_{n-1}})p(x_{t_{n-2}} \vert x_{t_{n-1}})$ 
+
+On remplit la matrice de covariance. Pour chaque coefficient, \og coeff = inf(indice1, indice2)\fg{}. On place les coefficients de manière \og intelligente \fg{} : on veut la matrice avec les entêtes $X_{t_{n-2}}$ et $X_{t_n}$. Ce qui donne (écrire $X_{t_{n-2}} X_{t_n} X_{t_{n-1}}$ au dessus de la matrice et sur le côté gauche): 
+
+\[
+\begin{pmatrix}
+  t_{n-2} & t_{n-2} & t_{n-2} \\
+  t_{n-2} & t_{n}   & t_{n-1} \\
+  t_{n-2} & t_{n-1} & t_{n-1}
+\end{pmatrix}
+\]
+
+Ainsi, $p(x_{t_n}, x_{t_{n-2}} \vert x_{t_{n-1}}) \sim \Normale(0,)$ (à terminer).
+
+
+\subsection{Loi de l'arrivée à un point}
+Considérons un point $a\in \R$ et un mouvement brownien $X(t)$ partant du point $0$. Nous allons étudier la loi de la variable aléatoire associant à chaque trajectoire l'instant de son arrivée au point $a$. Soit $\tau_a$ l'instant de la première arrivée au point $a$ de la trajectoire du processus partant du point $0$.  \\
+
+\Rq Il y a symétrie entre les variables aléatoires $\tau_a$ et $-\tau_a$. On supposera donc $a>0$. \\
+
+On recherche la fonction de répartition de $\tau_a$. On remarque que $[X(t) > a] \subset [\tau_a \leq t]$. En effet, une trajectoire ne peut pas dépasser $a$ sans l'avoir eu atteint.
+
+Or, $\P(X_t > a \vert \tau_a < t) = \frac{1}{2}$ (par symétrie).
+
+Ainsi,
+
+\[ \P(\tau_a < t) = 2\P(X_t > a) = 2 \int_a^{+\infty} \frac{1}{\sqrt{2\pi}} e^{\frac{-u^2}{2t}} du \]
+
+\subsection{Loi du maximum}
+
+On cherche à connaître le comportement du maximum de la trajectoire, dans le cas du mouvement Brownien. \\
+$M_{[0,t]} = \text{max}_{u \in [0,t]} X_u$
+
+Ici, on connait la loi de $\tau_a$. Donc,
+
+\[ \P(\text{max}_{u \in [0,t]} X_u < b) = \P(\tau_b > t) \]
+
+\section{Intégrale et différentielle stochastiques}
+
+Formule de Itô : Soit $X_t = \varphi(t,\psi_t)$ un processus, où $\varphi$ est une fonction de classe $\mathcal{C}^2$ allant de $\R^2$ dans $\R$, et $\psi_t$ un mouvement brownien.
+
+On a alors :
+$\ud X_t = \left(\dfrac{\partial }{\partial t}\varphi(t,\psi_t) + \dfrac{1}{2}\dfrac{\partial^2}{\partial y^2}\varphi(t,\psi_t)\right) \ud t + \dfrac{\partial}{\partial y}\varphi(t,\psi_t) \ud \psi_t $
+
+Or, on cherche $\int \psi_t \ud \psi_t = \varphi(t,\psi_t))$, ce qui équivalent à $\dfrac{\partial \varphi}{\partial t} + \dfrac{1}{2}\dfrac{\partial^2 \varphi}{\partial y^2} = 0$ et $\dfrac{\partial \varphi}{\partial y} = y$.
+
+On trouve $\varphi(t,y) = \frac{1}{2}(y^2-t)$
+
+Trouver une solution de $\ud X_t = aX_t \ud t + b X_t \ud \psi_t$.
+
+On cherche une solution de la forme $x_t = ce^{at}$. Avec la formule d'Itô, si $X_t = \varphi(t,\psi_t)$, en identifiant les parties $\ud t$ et $\ud \psi_t$, on a :
+
+\[ \dfrac{\partial }{\partial t}\varphi(t,\psi_t) + \dfrac{1}{2}\dfrac{\partial^2}{\partial y^2}\varphi(t,\psi_t) = a\varphi(t,\psi_t) \]
+et 
+\[\dfrac{\partial}{\partial y}\varphi(t,\psi_t) = b\varphi(t,\psi_t) \]
+
+On trouve :
+
+\[ \varphi(t,\psi_t) = e^{(a-\frac{b^2}{2})t + b\psi_t} \]
+
+
+Or $m_t = \E[X_t]$
+\chapter{Résultats utiles}
+
+\Th : (théorème centrale limite) : 
+
+Soit $X_1, X_2,\ldots$ une suite de variables aléatoires réelles définies sur le même espace de probabilité, indépendantes et identiquement distribuées suivant la même loi D. Supposons que l'espérance $\mu$ et l'écart-type $\sigma$ de D existent et soient finis avec $\sigma \neq 0$.
+
+Considérons la somme $S_n = \sum_{k=1}^n X_k$. Alors 
+\begin{itemize}
+  \item l'espérance de $S_n$ est $n\mu$ et
+  \item l'écart-type de $S_n$ est $\sigma\sqrt{n}$
+\end{itemize}
+
+De plus, quand $n$  est \og assez grand\fg{}, la loi normale $\Normale(n\mu, n\sigma^2)$ est une bonne approximation de la loi de $S_n$.
+
+On pose : 
+\[ \Bar{X_n} = \frac{S_n}{n} \]
+et 
+\[ Z_n = \frac{S_n - n\mu}{\sigma\sqrt{n}} \]
+
+La variable $Z_n$ est centrée et réduite.
+
+Le théorème central limite énonce alors que la suite de variables aléatoires $Z_1, \ldots Z_n, \ldots$ converge en loi vers une variable aléatoire $Z$, définie sur le même espace probabilisé, et de loi normale centrée réduite $\Normale(0,1)$ lorsque $n$ tend vers l'infini.
+
+Cela signifie que si $\Phi$ est la fonction de répartition de $\Normale(0,1)$, alors pour tout réel $z$ :
+
+\[ \lim_{n \to \infty} \mathbb P(Z_n \le z) = \Phi(z) \]
+
+ou, de façon équivalente :
+
+\[ \lim_{n \to \infty}\mathbb P\left(\frac{\overline X_n - \mu}{\sigma/\sqrt n}\leq z\right) = \Phi(z)\]
+
+\end{document}
