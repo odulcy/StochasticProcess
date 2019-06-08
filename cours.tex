@@ -45,10 +45,42 @@ $\B(\R^d)$ désigne la tribu borélienne de $\R^d$. \\
 \section{Rappels de probabilités}
 
 \begin{definition}
+Une tribu $B$ est un ensemble des sous-ensembles de $E$ vérifiant :
+\begin{itemize}
+  \item $E, \emptyset \in B$
+  \item $\forall A \in B, A^C \in B$
+  \item $\forall A_n \in B \Rightarrow \bigcup_{n\in\N} A_n \in B$
+\end{itemize}
+\end{definition}
+
+\begin{definition}
+On appelle tribu engendrée par une famille d'ensembles la plus petite tribu au sens de l'inclusion contenant tous les éléments de cette famille d'ensembles.
+\end{definition}
+
+\section{Introduction}
+\begin{definition}
   Un processus stochastique X est la donnée de l'ensemble défini par $\{X_t; 0\leq t < +\infty\}$, où à $t$ fixé, $X_t$ est une variable aléatoire définie sur $(\Omega,\F)$ à valeurs dans $(\R^d,\B(\R^d))$.
 \end{definition}
 
 \Rq On voit bien que $t$ peut prendre un ensemble \textbf{infini} de valeurs.
+
+\begin{ex}
+  On pose $I=[0,1]$. On considère que chaque $X_t$ est à valeurs dans $\R$. Ainsi, le processus stochastique $X=(X_t)_{t \in [0,1]}$ prend alors ses valeurs dans $\R^{[0,1]}$. Ces éléments sont appelés \og trajectoires \fg{} du processus.
+\end{ex}
+
+L'idée est de définir une tribu $B$ et une probabilité $\P$ sur $B$ telle que $\forall n \in \N, \forall 0\leq t_1 \leq t_2 \leq \ldots \leq t_n \leq 1$, on puisse trouver la probabilité de $(X_{t_1}, \ldots, X_{t_n})$.
+
+\section{Le théorème de Kolmogorov}
+Soit $I$ un ensemble quelconque et $(E_i, B_i, \P_i)_{i \in I}$ une famille d'espaces probabilisés. Soit $I_f$ un sous-ensemble fini de $I$. On suppose qu'il existe une probabilité $\P_{I_f}$ sur la tribu $B_{I_f}$. Ainsi, pour chaque sous-ensemble fini $I_f$ de $I$, on a un espace probabilisé $(E_{I_f}, B_{I_f}, \P_{I_f})$.
+
+\begin{definition}
+  On dit que l'ensemble des espaces probabilisés $(E_{I_f}, B_{I_f}, \P_{I_f})$ est un \textbf{système projectif} si pour tous $I_1$ et $I_2 \subset I_1$ \textbf{finis}, la probabilité $\P_{I_2}$ est la loi marginale de $P_{I_1}$.
+\end{definition}
+
+\begin{definition}
+  On appelle tribu de \textsc{Kolmogorov} la tribu $\widetilde{B}$ engendrée par les tribus.
+\end{definition}
+
 \chapter{Mouvement brownien et calcul différentiel stochastique}
 \section{Mouvement brownien}
 
@@ -130,8 +162,7 @@ On trouve :
 Or $m_t = \E[X_t]$
 \chapter{Résultats utiles}
 
-\Th : (théorème centrale limite) : 
-
+\section{Le théorème central limite}
 Soit $X_1, X_2,\ldots$ une suite de variables aléatoires réelles définies sur le même espace de probabilité, indépendantes et identiquement distribuées suivant la même loi D. Supposons que l'espérance $\mu$ et l'écart-type $\sigma$ de D existent et soient finis avec $\sigma \neq 0$.
 
 Considérons la somme $S_n = \sum_{k=1}^n X_k$. Alors 
@@ -149,7 +180,8 @@ et
 
 La variable $Z_n$ est centrée et réduite.
 
-Le théorème central limite énonce alors que la suite de variables aléatoires $Z_1, \ldots Z_n, \ldots$ converge en loi vers une variable aléatoire $Z$, définie sur le même espace probabilisé, et de loi normale centrée réduite $\Normale(0,1)$ lorsque $n$ tend vers l'infini.
+\begin{thm}(Théorème Central Limite)
+La suite de variables aléatoires $Z_1, \ldots Z_n, \ldots$ converge en loi vers une variable aléatoire $Z$, définie sur le même espace probabilisé, et de loi normale centrée réduite $\Normale(0,1)$ lorsque $n$ tend vers l'infini.
 
 Cela signifie que si $\Phi$ est la fonction de répartition de $\Normale(0,1)$, alors pour tout réel $z$ :
 
@@ -158,5 +190,1267 @@ Cela signifie que si $\Phi$ est la fonction de répartition de $\Normale(0,1)$, 
 ou, de façon équivalente :
 
 \[ \lim_{n \to \infty}\mathbb P\left(\frac{\overline X_n - \mu}{\sigma/\sqrt n}\leq z\right) = \Phi(z)\]
+\end{thm}
+
+\chapter{Méthodes de simulation pour les équations différentielles stochastiques}
+\section{Introduction (rappel) sur les équations différentielles stochastiques}
+\subsection{Familles gaussiennes}
+
+Dans la suite, on se donne un espace probabilisé $(\Omega, \F, \P)$
+
+\begin{definition}
+  Un vecteur $X=(X_1,\ldots,X_n)$ de variable aléatoire réelles est un vecteur gaussien si et seulement si pour $a\in\R^n$, $\langle a,X \rangle$ est une gaussienne
+\end{definition}
+
+Si $X$ est un vecteur gaussien, alors si $a \in \R^n$ :
+\begin{itemize}
+  \item $\E[ \langle a, X \rangle] = \langle a, \E[X] \rangle = \langle a, \mu \rangle$
+  \item $\V[ \langle a, X \rangle] = \V[a^T X] = a^T \V[X] a = a^T \Sigma a$
+\end{itemize}
+
+Ainsi $ \langle a,X \rangle\sim \Normale( \langle a, \mu \rangle, a^T \Sigma a)$
+
+On en déduit que pour tout $a \in \R^n$ :
+
+\[ \E[e^{i \langle a, X \rangle}] = e^{i \langle a, \mu \rangle - \frac{1}{2} a^T \Sigma a} \]
+
+\begin{prop}
+Soit $X$ un vecteur gaussien de $\R^n$ est $(i_1,\ldots, i_d)$ $d$ indices distincts entre $1$ et $n$. Si pour tout $(j_1,j_2) \in \{1,\ldots,d\}^2$ tel que $j_1 \neq j_2$ $\cov(X_{j_1},X_{j_2}) = 0$ alors $(X_{i_1}, \ldots, X_{i_d})$ sont indépendants.
+\end{prop}
+
+\Preuve Notons $\mu_i = \E[X_i]$ et $\sigma_i^2 = \V(X_i)$. Le vecteur 
+$\begin{pmatrix}
+X_{i_1}\\
+\vdots \\
+X_{i_d}
+\end{pmatrix}$ est un vecteur gaussien de moyenne
+$\begin{pmatrix}
+\mu_{i_1}\\
+\vdots \\
+\mu_{i_d}
+\end{pmatrix}$ et de variance $\text{diag}(\sigma_1^2,\ldots,\sigma_d^2)$. Si on introduit 
+$\begin{pmatrix}
+\epsilon_{i_1}\\
+\vdots \\
+\epsilon_{i_d}
+\end{pmatrix}$ un vecteur gaussien avec des variables aléatoires i.i.d. de loi normale centrée réduite alors $\begin{pmatrix}
+X_{i_1}\\
+\vdots \\
+X_{i_d}
+\end{pmatrix}$ a la même loi que 
+$\begin{pmatrix}
+Z_{i_1}\\
+\vdots \\
+Z_{i_d}
+\end{pmatrix}$ où $Z_{i_j} = \mu_{i_j} + \sigma_{i_j}\epsilon_{i_j}$. Les $z_{i_j}$ étant indépendants, on en déduit le résultat. \\
+
+Ce résultat se généralise au cas suivant :
+\begin{prop}
+Si $I$ et $J$ sont deux sous-ensembles d'indices $\{1,\ldots,n\}$ disjoints alors si pour tout $i \in I$ et tout $j \in J$ $\cov(X_i,X_j)=0$ on a $(X_i)_{i \in I}$ et $(X_j)_{j \in J}$ sont indépendants.
+\end{prop}
+
+\begin{thm}[Cochran]
+  Soit $X \simeq \Normale(0,I_n)$ un vecteur gaussien centré et réduit. Soit $F$ un sous-espace vectoriel de $R^n$ de dimension $p\geq 1$ et $F^\bot$ son orthogonal. Alors $\proj_F(X)$ et $\proj_{F^\bot}(X)$ sont des vecteurs gaussiens indépendants et $\Vert \proj_{F}(X)\Vert^2 \sim \chi^2(p)$ et $\Vert \proj_{F^\bot}(X)\Vert^2 \sim \chi^2(n-p)$.
+\end{thm}
+
+\Preuve Soit $(u_1,\ldots,u_n)$ une base orthonormée de $\R^n$ adaptée à $F$ et $F^\bot$. $(u_1,\ldots,u_p)$ est une base orthonormée de $F$ et $(u_{p+1},\ldots,u_n)$ est une base orthonormée de $F^\bot$. \\
+
+On peut écrire $\proj_F = \sum_{i=1}^p \langle X, u_i  \rangle u_i$ et $\proj_{F^\bot} = \sum_{i=p+1}^n \langle X, u_i \rangle u_i$. Si on considère $U_{(p)} = (u_1,\ldots,u_p) \in \R^{n\times p}$ et $U_{(n-p)} = (u_{p+1},\ldots,u_{n}) \in R^{n \times (n-p)}$. On a alors : $\proj_{F}(X) = U_{(p)} U_{(p)}^T X$  et $\proj_{F^\bot}(X) = U_{(n-p)} U_{(n-p)}^T X$. \\
+
+On sait djéà que $\proj_F(X)$ et $\proj_{F^\bot}(X)$ sont des vecteurs gaussiens et 
+\[
+\begin{pmatrix}
+  \proj_F(X) \\
+  \proj_{F^\bot}(X)
+\end{pmatrix} 
+=
+\begin{pmatrix}
+  U_{(p)}U_{(p)}^T \\
+  U_{(n-p)}U_{(n-p)}^T
+\end{pmatrix}
+X
+\]
+
+Or, $\E[\proj_F(X) ] = 0$ et $\E[\proj_{F^\bot}(X)] = 0$ et
+$\V\left[
+\begin{pmatrix}
+  \proj_F(X) \\
+  \proj_{F^\bot}(X)
+\end{pmatrix}\right]
+=
+\begin{pmatrix}
+  U_{(p)}U_{(p)}^T \\
+  U_{(n-p)}U_{(n-p)}^T
+\end{pmatrix}
+\V[X]
+\begin{pmatrix}
+  U_{(p)}U_{(p)}^T \\
+  U_{(n-p)}U_{(n-p)}^T
+\end{pmatrix}^T
+=
+\begin{pmatrix}
+  U_{(p)}U_{(p)}^T  & 0\\
+  0 & U_{(n-p)}U_{(n-p)}^T
+\end{pmatrix}^T$
+
+Finalement, on a bien $\proj_F(X)$ et $\proj_{F^\bot}(X)$ sont indépendants.
+
+\subsection{Le mouvement brownien}
+
+\begin{definition}
+  Un processus à temps continu $(W_t)_{t>0}$ est un mouvement brownien (issu de 0) si et seulement si
+\begin{itemize}
+\item $W_0 = 0$ 
+\item $(W_t)_{t>0}$ est un processus gaussien 
+\item Pour tout $(s,t)\in\R^2_+$, $W_t-W_s \sim \Normale(0,t-s)$ 
+\item Pour tout $(s,t) \in \R^2_+$, $s\leq t$, $W_t -W_s $ est indépendant de $\sigma((W_u)_{0\leq u \leq t})$ 
+\item La trajectoire $t \mapsto W_t$ est continue
+\end{itemize}
+
+Si on n'insère pas la continuité dans la définition, on démontre tout de même que $t\mapsto W_t$ est continue presque sûrement.
+\end{definition}
+\begin{prop}
+  Un processus gaussien $(W_t)_{t>0}$ à trajectoires continues et issu de 0 est un mouvement brownien si et seulement si
+  \begin{itemize}
+    \item $\forall t>0$, $\E[W_t] = 0$
+    \item $\forall (s,t)\in\R^2_+$, $\E[W_sW_t] = \min(s,t) = s\wedge t$
+  \end{itemize}
+\label{prop_brownien}
+\end{prop}
+
+\Preuve 
+$\Rightarrow$ Supposons que $(W_t)_{t>0}$ est un mouvement brownien.
+\begin{itemize}
+  \item $\forall t\geq 0$, $\E[W_t] = \E[W_t-W_0] = 0$ cat $W_t-W_s \sim \Normale(0,1)$.
+  \item Soit $(s,t) \in \R^2_+$, tel que $s\leq t$.
+   \begin{equation*}
+    \begin{split}
+     \E[W_sW_t] &= \E[W_s(W_s+W_t-W_s)] \\
+     &= \E[W_s^2] + \E[W_s(W_t-W_s)] \\
+      &= \E[(W_s-W_0)^2] + \E[W_s]\E[W_t-W_s] \text{ car $W_t - W_s$ est indépendant de $W_s$} \\
+      &= s + 0 \\
+      &= s
+    \end{split} 
+   \end{equation*} 
+\end{itemize}
+$\Leftarrow$ Supposons que $\E[W_t] = 0$ et pour tout $(s,t) \in \R^2$, $\E[W_sW_t] = s \wedge t$. 
+\begin{itemize}
+  \item Soit $(s,t) \in \R^2_+$ avec $s$ et on veut montrer que $W_t -W_s$ est indépendant de $\sigma((W_u)_{0 \leq u \leq t})$. Le processus étant gaussien, il faut (et il suffit) de montre que pour tout $0 \leq u \leq s$, $\cov(W_t-W_s, W_u) = 0$.
+
+Or,
+\begin{equation*}
+\begin{split}
+  \cov(W_t-W_s,W_u) &= \E[W_uW_t] - \E(W_uW_t] \\
+  &= u\wedge t - u\wedge s \\
+  &= u - u \\
+  &= 0
+\end{split}
+\end{equation*}
+  Pour tout $(s,t) \in \R^2_+$, $s\leq t$, on sait que $W_t-W_s$ est une gaussien centrée. De plus,
+    \begin{equation*}
+    \begin{split}
+      \V[W_t -W_s ] = \E[(W_t-W_s)^2] &= \E[W_t^2] + \E[W_s^2] - 2\E[W_tW_s] \\
+      &= t + s - 2 s\wedge t \\
+      &= t - s
+    \end{split}
+    \end{equation*}
+\end{itemize}
+
+\begin{cor}
+  Soit $(W_t)_{t>0}$ un mouvement brownien alors les processus suivants sont également des mouvements browniens
+  \begin{itemize}
+    \item $(W_{t+t_0} - W_{t_0})_{t>0}$ pour $t_0 \in \R_+$
+    \item $(tW_{1/t})_{t>0}$
+    \item $(\alpha W_{1/t})_{t>0}$ pour $\alpha > 0$
+  \end{itemize}
+\end{cor}
+
+\begin{prop}
+  Soit $(W_t)_{t>0}$ un mouvement brownien alors :
+  \begin{itemize}
+    \item $\dps\limsup_{t \to +\infty} \frac{W_t}{\sqrt{t}} = + \infty$ (et donc $\dps\limsup_{t\to +\infty} W_t = +\infty$) presque sûrement
+    \item Le mouvement brownien prend presque sûrement toutes les valeurs réelles (et n'est dérivable nulle part).
+  \end{itemize}
+\end{prop}
+
+\begin{thm}[Donsker]
+  Soit $(U_k)_{k\geq 0}$ une suite de variables aléatoires centrées i.i.d. et de carré intégrable avec $\sigma^2 = \V[U_1]$. Pour tout $t \in [0,1]$ et tout $n \leq 1$ on introduit $X_n(t) = \frac{1}{\sigma\sqrt{n}}\left(\sum_{k=1}^{\lfloor nt \rfloor} U_k + (nt - \lfloor nt \rfloor)U_{\lfloor nt \rfloor +1 }\right)$. Pour tout $n\leq 1$, $X_n = (X_n(t))_{0\leq t \leq 1}$ est un élement de $\mathcal{C}([0,1], \R)$ que l'on munit de la topologie induite pour la norme inférieure.
+Alors,
+  \[ X_n \xrightarrow[n\to +\infty]{\mathcal{L}} (W_t)_{0 \leq t \leq 1} \]
+\end{thm}
+
+\subsection{Equations différentielles stochastiques}
+
+Pour construire une intégrale stochastique, on procède en mimant la construction de l'intégrale de \textsc{Riemann}. Pour $T>0$ fixé et une fonction $f : [0,T] \rightarrow \R$, on introduit la quantité 
+
+\[ I_{n,T}(f) = \frac{T}{n} \sum_{i=0}^n f(t_i^n)\left(t_{i+1}^n - t_i^n\right) \]
+
+où $(t_i^n)_{0 \leq i \leq n+1}$ est une subdivision de $[0,T]$, $t_0^n = 0 < t_1^n < \ldots < t_{n+1}^n = T$. \\
+
+Si $\sup_{0\leq i \leq n+1}(t_{i+1}^n - t_n^i)\xrightarrow[n\to +\infty]{} 0$ et si $f$ est continue alors $I_{n,T}(f)$ converge lorsque $n$ tend vers l'infini vers une quantité notée $ \int_{0}^{T} f(u) \der u$. \\
+
+\subsubsection{Construction}
+\ptitle{Etape 1} : On considère un processsus étagé sur $[0,T]$ :
+\[ \forall t \in [0, T], X_t = \sum_{i=0}^{n} X_{t_i^n} \mathbbm{1}_{[t_i^n, t_{i+1}^n[}(t) \]
+avec $X_{t_i^n}$ une variable aléatoire, $\F_{t_i^n}$ mesurable (où $\F_{t_i^n}$ est une tribu donnée) et $t_0^n = 0 < t_1^n < \ldots < t_{n+1}^n = T$. Alors on introduit l'intégrale stochastique suivante :
+
+\[ \int_{0}^{T} X_s \der W_s = \sum_{i=0}^{n} X_{t_i^n} \left(W_{t_{i+1}^n} - W_{t_i^n} \right) \]
+
+\ptitle{Etape 2} : Si $(X_t)_{0\leq t \leq T}$ un processus continu et borné alors pour construire $ \int_{0}^{T} X_s \der W_s$ on procède de la façon suivante :
+\begin{itemize}
+  \item on introduit pour $n \geq 1$, $X_t^n = \sum_{k=0}^{n+1} X_{ \frac{kT}{n}} \mathbbm{1}_{[ \frac{kT}{n}, \frac{(k+1)T}{n} [}(t)$
+    \item on construit $M_T^n = \int_{0}^{T} W_s \der W_s$
+    \item On montre ensuite que $(M_T^n)_{n\geq 0}$ converge dans $\mathcal{L}^2$ vers une variable aléatoire $M_T$ : \\
+      $\E[(M_T^n - M_T)^2] \xrightarrow[n\to +\infty]{} 0$. On note alors $M_T = \int_{0}^{T} X_s \der W_s$
+\end{itemize}
+
+Dans la suite de ce cours nous allons étudier (d'un point de vue numérique) les solutions d'EDS de la forme :
+\begin{equation*}
+  \label{eq-eds}
+\begin{split}
+\der X_s = \alpha_\theta (X_s) \der s + \sigma_\theta (X_s) \der W_s 
+\end{split}
+\end{equation*}
+avec $\theta \in \R^q$ un paramètre (inconnu et à estimer)
+\begin{itemize}
+\item $\alpha_\theta : \R \to \R$ et $\sigma_\theta : \R \to \R$ deux fonctions continues.
+\item $(W_t)_{t\geq 0}$ un mouvement brownien (et sa filtration $F_t = \sigma((W_t)_{0 < u < t})$)
+\end{itemize}
+où être solution de \eqref{eq-eds} signifie :
+
+\[ X_t = X_0 + \int_{0}^{t} \alpha_\theta(X_s) \der s + \int_{0}^{t} \sigma_\theta(X_s) \der W_s \]
+
+\begin{ex}[Ecologie du mouvement]
+  $(X_s)_{s \geq 0}$ est la position à chaque instant d'un individu (animal par exemple) :
+  \[
+    \begin{cases}
+      \der X_s = \nabla_\sigma A_\sigma(X_s) \der s + \sigma \der W_s \\
+      Y_t = X_{t_k} + \epsilon_k \text{ où } \epsilon_k \sim \Normale(0, \eta^2 I_2)
+    \end{cases}
+  \]
+  où $A_\sigma : \R^2 \to \R$ un \og potentiel \fg{} (caractérise les zones attractives et répulsives).
+\end{ex}
+
+Un autre exemple existe en neurosciences.
+
+\section{Simulation du mouvement brownien}
+
+\subsection{Simulation d'un squelette de trajectoire}
+
+On a fixé l'horizon $T>0$ et $n$ instants $(t_1,\ldots,t_n)$ tels que $0 < t_1 <\ldots <t_n < T$. Pour simuler $(W_{t_1}, \ldots, W_{t_n})$ on propose l'algorithme suivant.
+\begin{itemize}
+  \item On simule $(\varepsilon_1, \ldots, \varepsilon_n)$ indépendantes avec $\varepsilon_1 \sim \Normale(0,t_1)$ et $\varepsilon_i \sim \Normale(0, t_i - t_{i-1})$ pour $1 < i \leq n$.
+  \item On pose $X_{t_1} = \varepsilon_1$ et pour $i>1$ $X_{t_i} = X_{t_{i-1}} + \varepsilon_i$.
+\end{itemize}
+Alors en posant $X_0 = 0$, $(X_{t_1}, \ldots, X_{t_n}) \overset{\mathcal{L}}{=} (W_{t_1}, \ldots, W_{t_n})$ \\
+
+En effet, 
+
+\begin{equation*}
+\begin{split}
+  (X_{t_1}, X_{t_2} - X_{t_1}, \ldots, X_{t_n} - X_{t_{n-1}}) &= (\varepsilon_1, \ldots, \varepsilon_n) \\
+  &\overset{\mathcal{L}}{=} (W_{t_1}, W_{t_2} - W_{t_1}, \ldots, W_{t_n} - W_{t_{n-1}})
+\end{split}
+\end{equation*}
+Puisque $X_0 = W_0 = 0$, on :
+\begin{equation*}
+\begin{split}
+  (X_0, X_1, X_{t_1}, X_{t_2} - X_{t_1}, \ldots, X_{t_n} - X_{t_{n-1}}) \overset{\mathcal{L}}{=} (W_0, W_{t_1}, W_{t_2} - W_{t_1}, \ldots, W_{t_n} - W_{t_{n-1}})
+\end{split}
+\end{equation*}
+Par transformation linéaire et déterministe on en déduit que 
+\begin{equation*}
+\begin{split}
+  (X_0, X_1, \ldots, X_n) \overset{\mathcal{L}}{=} (W_0, W_1, \ldots, W_n)
+\end{split}
+\end{equation*}
+
+\subsection{Complétion des trajectoires browniennes}
+
+\renewcommand{\P}{\mathrm{P}}
+
+Dans cette section, on suppose disponible une réalisation $(W_{t_1},\ldots,W_{t_n})$ d'un mouvement brownien aux instants prédéfinis $(t_1,\ldots,t_n)$. 
+On souhaite, conditionnellement à ce squelette, simuler les valeurs du mouvement brownien à d'autres instants.
+
+\begin{lem}
+  \label{lemme-completion}
+  On suppose que $(X,Y,Z)$ est un vecteur gaussien, centré. Alors, la loi de $Y$ condtionnellement à $(X,Z)$ est une loi gaussienne de moyenne $\P_{(X,Z)}(Y)$ et de variance $\Vert Y - \P_{(X,Z)}(Y) \Vert^2$ où $\P_{X,Z}$ est la projection orthogonale sur l'espace engendré par $(X,Z)$ pour le produit scalaire $ \langle U, V \rangle \mapsto \E[UV]$
+\end{lem}
+
+\Preuve : Voir les notes du professeur. \\
+
+On cherche à simuler $W_u$ conditionnellement à $(W_{t_1},\ldots,W_{t_n})$ où $u \in (t_{k},t_{k + 1})$, $k \in \{1, \ldots, n-1 \}$. Cette loi est égale à la loi de $W_u$ sachant $(W_{t_k}, W_{t_{k+1}})$. On sait que $(W_{t_k}, W_u, W_{t_{k+1}})$ est un vecteur gaussien centré, on peut donc appliquer le lemme \ref{lemme-completion}. \\
+
+Pour calculer la loi cherchée, on calcule donc $\P_{(W_{t_k}, W_{t_{k+1}})}(W_u)$ et $ \Vert W_u - P_{(W_{t_k}, W_{t_{k+1}})}(W_u) \Vert^2$.
+Ainsi, $\left( \frac{W_{t_k}}{\Vert W_{t_k}\Vert}, \frac{ W_{t_{k+1}}-W_{t_k} }{\Vert W_{t_{k+1}}-W_{t_k} \Vert }\right)$ forme une base orthogonale de $\Vect(W_{t_k}, W_{t_{k+1}})$. \\
+
+Ainsi,
+\begin{equation*}
+\begin{split}
+  \P_{\left( W_{t_k}, W_{t_{k+1}} \right)} (W_u) &= \left\langle W_u, \frac{W_{t_k}}{\Vert W_{t_k} \Vert} \right\rangle \frac{W_{t_k}}{\Vert W_{t_k} \Vert} + \left\langle W_u, \frac{W_{t_{k+1} - W_{t_k}}}{\Vert W_{t_{k+1}} - W_{t_k} \Vert} \right\rangle \frac{W_{t_{k+1}} - W_{t_k}}{\Vert W_{t_{k+1}} - W_{t_k} \Vert} \\
+  &= \frac{ \langle W_u, W_{t_k} \rangle}{ \langle W_{t_k}, W_{t_k} \rangle} W_{t_k} + \frac{ \langle W_u, W_{t_{k+1}} - W_{t_k} \rangle}{ \langle W_{t_{k+1}} - W_{t_k},W_{t_{k+1}} - W_{t_k}  \rangle} \left(W_{t_{k+1}} - W_{t_k}\right)
+\end{split}
+\end{equation*}
+
+Or, 
+\newcommand{\wtk}{W_{t_k}}
+\newcommand{\wu}{W_{u}}
+\newcommand{\wtkp}{W_{t_k+1}}
+\begin{equation*}
+\begin{split}
+  \langle \wtk, \wtk \rangle &= \E[\wtk^2] \\
+  &= t_k
+\end{split}
+\end{equation*}
+
+Puis,
+\begin{equation*}
+\begin{split}
+  \langle \wtkp - \wtk, \wtkp - \wtk \rangle &= \E[\left( \wtkp - \wtk \right)^2] \\
+  &= t_{k+1} - t_k
+\end{split}
+\end{equation*}
+
+Enfin
+\begin{equation*}
+\begin{split}
+  \langle \wu , \wtk \rangle &= \E[\wu \wtk] \\
+  &= u \wedge t_k \\
+  &= t_k
+\end{split}
+\end{equation*}
+
+Et 
+\begin{equation*}
+\begin{split}
+  \langle \wu, W_{t_{k+1}} - W_{t_k} \rangle &= \langle \wu, W_{t_{k+1}} \rangle - \langle W_u, W_{t_k} \rangle \\
+  &= \E[W_u W_{t_{k+1}}] - \E[W_u W_{t_k}] \\
+  &= w \wedge t_{k+1} - w \wedge t_k \\
+  &= u - t_k
+\end{split}
+\end{equation*}
+
+Conditionnellement à $(W_k, W_{t_{k+1}})$ la moyenne de $W_u$ est $\E[W_u \vert W_{t_k}, W_{t_{k+1}}] = W_{t_k} + \frac{u-t_k}{t_{k+1} - t_k}(W_{t_{k+1}} - W_{t_k})$. \\
+
+Soit 
+\begin{equation*}
+\begin{split}
+  \E[W_u \vert W_{t_k}, W_{t_{k+1}}] = \frac{t_{k+1} - u}{t_{k+1} - t_k} W_{t_k} + \frac{u - t_k}{t_{k+1} -t_k} W_{t_{k+1}}
+\end{split}
+\end{equation*}
+
+La variance est 
+\begin{equation*}
+\begin{split}
+  \E[(W_u - \E(W_u \vert W_{t_k}, W_{t_{k+1}}))^2] &= \left(\frac{t_{k+1} - u}{t_{k+1}-t_k}\right)^2  \underbrace{\E[(W_{t_k}-W_u)^2]}_{u-t_k} + \left( \frac{u-t_k}{t_{k+1} - t_k} \right)^2 \underbrace{\E[(W_u-W_{t_{k+1}})]}_{t_{k+1} - u} \\
+  &\text{ car } \E[(\wtk - \wu)(\wtkp - \wu)] \underset{\text{indép}}{=} \E[\wtk - \wu]\E[\wtkp - \wu] = 0 \\ 
+  &= \frac{(t_{k+1}-u)^2 (u-t_k)}{(t_{k+1} - t_k)^2} + \frac{(u-t_k)^2 (t_{k+1}-u)}{(t_{k+1} - t_k)^2} \\
+  &= \frac{(t_{k+1}-u)(u-t_k)}{t_{k+1} - t_k}
+\end{split}
+\end{equation*}
+
+\subsection{Utilisation pour simulations Monte Carlo}
+Dans le cas de l'équation différentielle stochastque suivante :
+
+\[ \der S_t = \rho S_t \der t + \sigma S_t \der W_t \]
+
+Soit $S_T - S_0 = \int_{0}^{T} \rho S_s \der s + \int_{0}^{T} \sigma S_s \der W_s$, on peut prouver dans ce cas que :
+
+\[ S_T = S_0 e^{\left(r- \frac{\sigma^2}{2}\right)T + \sigma W_T} \]
+
+En général, on s'intéresse ensuite à une quantité du type $\E[h(S_T)]$. Un choix standard : $h : x \mapsto (x-k)_+$ où $k>0$. Une approche très classique pour estimer $\E[h(S_T)]$ est d'utiliser une méthode de \textsc{Monte Carlo}. On simule $(S_t^i)_{1\leq i \leq N}$ indépendants et de même loi pour $N \geq 1$ et on estime $\E[h(s_T)]$ par $ \frac{1}{N} \sum_{i=1}^{N} h(S_t^i)$. Ici cela se résume à simuler $(W_T^i)_{1 \leq i \leq N}$ indépendants. Cette approche est justifiée par 
+
+\begin{itemize}
+  \item La loi des grands nombres : si $h$ est borné, $ \frac{1}{N} \sum_{i=1}^{N} h(S_T^i) \xrightarrow[N\to +\infty]{\text{p.s.}} \E[h(S_T)]$
+  \item Le théorème central limite : si $h$ est borné $ \frac{\sqrt{N}}{\sqrt{[\V[h(S_T)]}}\left( \frac{1}{N} \sum_{i=1}^{N} h(S_T^i) - \E[h(S_T)] \right) \xrightarrow[n\to +\infty]{\mathcal{L}} \Normale(0,1)$
+\end{itemize}
+
+\section{Simulation approchée par discrétisation}
+Dans cette section, on s'intéresse à un processus $(X_t)_{0 \leq t \leq T}$ solution de l'EDS suivante :
+
+\begin{equation}
+  \label{EDS-discr}
+\begin{split}
+\der X_t = b(X_t) \der t + \sigma(X_t) \der W_t 
+\end{split}
+\end{equation}
+
+où $b : \R \to \R$ et $\sigma : \R \to \R$ sont continues. \\
+
+Tout d'abord, notons que si on suppose $\sigma$ et $b$ lipschitziennes, \eqref{EDS-discr} admet une solution (forte) unique. S'il existe $K \in \R_+$ tel que pour tout $(x,y) \in \R^2$
+\[ \vert b(x) - b(y) \vert + \vert \sigma(x) - \sigma(y) \vert \leq K \vert x - y \vert \]
+
+alors il y a unicité de processus $(X_t)_{0 \leq t \leq T}$ s'écrivent :
+
+\[ X_t - X_0 = \int_{0}^{t} b(X_s) \der s + \int_{0}^{t} \sigma(X_s) \der W_s \text{ p.s.} \]
+
+\subsection{Approximations d'Euler}
+
+Pour écrire l'approximation d'\textsc{Euler}, on introduit une discrétisation de l'interalle $[0,T]$ : $\left( t_k^n = \frac{kT}{N} \right)_{0 \leq k \leq n}$ et pour simuler $(Y_t)_{t \in [0,T]}$ aux instants $(t_k^n)_{0 \leq k \leq n}$, on \og fige \fg{} les valeurs de $\sigma$ et de $b$ à ces instants.
+
+Entre $t_k^n$ et $t_{k+1}^n$ pour $0 \leq k \leq n-1$, on approche \eqref{EDS-discr} par $\der \widetilde{X_t} = b(X_{t_k^n}) \der t + \sigma(X_{t_k^n}) \der W_t$. On a alors 
+
+  \[
+    \begin{cases}
+      \widetilde{X_0} = X_0 \\
+      \forall k \in \{0, \ldots, n-1\}, \widetilde{X_{t_{k+1}^n}} = \widetilde{X_{t_k}^n} + \frac{T}{n} b(\widetilde{X_{t_k}^n}) + \sigma(\widetilde{X_{t_k}^n})\sqrt{ \frac{T}{n}} \varepsilon_{k+1}
+    \end{cases}
+  \]
+
+  où $\left(\varepsilon_k\right)_{1 \leq k \leq n}$ sont i.i.d., de loi $\Normale(0,1)$.
+  Cette approximation de $(X_{t_k^n},\ldots,X_T)$ est appelée approxmation d'\textsc{Euler} à pas constant.
+
+  On peut introduire une approximation d'\textsc{Euler} continue de la façon suivante :
+  \[
+    \begin{cases}
+      \widetilde{X_0} = X_0 \\
+      \forall k \in {0, \ldots, n-1}, \forall t \in [t_k^n, t_{k+1}^n), \overline{X_t} - \overline{X_{t_k^n}} = b(\overline{X_{t_k^n}}) (t-t_k^n) + \sigma(\overline{X_{t_k^n}})(W_t - W_{t_k^n})
+    \end{cases}
+  \]
+
+  On s'intéresse à la quantification de l'erreur d'approximation lorsque l'on remplace $(x_t)_{0 \leq t \leq T}$ par $(\overline{X_t})_{0 \leq t \leq T}$. Avant d'étuder l'approximation de \eqref{EDS-discr} par la méthode d'Euler, on étudie l'approximation du brownien. \\
+
+\ptitle{Erreur d'approximation pour le brownien :} \\
+On cherche ici à quantifier :
+\[ \left\Vert \sup_{t \in [0,T]} \vert W_t - \overline{W_t} \vert \right\Vert_p \text{ pour } p \geq 2 \]
+
+\ptitle{Borne inférieure :}
+\newcommand{\maxn}{\max_{k\in\{1,\ldots,n\} } }
+\newcommand{\supt}{\sup_{t \in [t_{k-1}^n, t_k^n)} }
+\renewcommand{\wtk}{W_{t_k^n}}
+\begin{equation*}
+\begin{split}
+  \Vert \sup_{t \in [0,T]} \vert W_t - \overline{W_t} \vert \Vert_p &= \Vert \maxn \supt \vert W_t - \wtk \vert \Vert_p  \\
+  &= \sqrt{\frac{T}{n}} \Vert \maxn \supt \sqrt{\frac{n}{T}} \vert W_t - \wtk \vert \Vert_p  \\
+  &= \sqrt{\frac{T}{n}} \Vert \maxn \sup_{t \in [k-1, k)} \underbrace{\sqrt{\frac{n}{T}}}_\alpha \vert W_{t {\frac{T}{n}}} - W_{(t-1) \frac{T}{n}} \vert \Vert_p \\
+  &= \sqrt{\frac{T}{n}} \Vert \maxn \sup_{t \in [k-1, k)} \sqrt{\frac{n}{T}} \vert W_t - W_{k-1} \vert \Vert_p \\
+  &\text{ car $(\alpha W_{ \frac{t}{\alpha^2}})_{t \in [0,T]}$ est un mouvement brownien. } \\
+  &= \sqrt{ \frac{T}{n} } \Vert \max_{k \in \{ 1, \ldots, n \}} \varepsilon_k \Vert_p \text{ où } \varepsilon_k = \sup_{t \in [k-1, k)} \vert W_t - W_{k-1} \vert
+\end{split}
+\end{equation*}
+
+$\forall k \in \{ 1, \ldots, n \}$, $\varepsilon_k \geq \vert W_k - W_{k-1} \vert \geq 0$.
+
+Ainsi,
+\renewcommand{\wtk}{W_{t_k^n}}
+\begin{equation*}
+\begin{split}
+  \Vert \sup_{t \in [0,T]} \vert W_t - \overline{W_t} \vert \Vert_p &\geq \sqrt{ \frac{T}{N} } \Vert \max_{k \in \{ 1, \ldots, n \}} \vert W_k - W_{k-1} \vert \Vert_p \\
+  &\geq \sqrt{ \frac{T}{N} } \Vert \max_{k \in \{ 1, \ldots, n \}} \vert W_k - W_{k-1} \vert \Vert_p \\
+  &\text{ où } (\vert W_k - W_{k-1} \vert)_{1 \leq k \leq n} \text{ sont iid avec } W_k - W_{k-1} \sim \Normale(0,1)\\
+  &\geq \sqrt{ \frac{T}{N} } \sqrt{ \Vert \max_{k \in \{ 1, \ldots, n \}} \vert W_k - W_{k-1} \vert^2 \Vert_{ \frac{p}{2} }} \\
+  &\text{ car } \E[\vert Z \vert^p]^{ \frac{1}{p}} = \sqrt{\E[(\vert Z \vert^2)^\frac{p}{2}]^{\frac{1}{p}}} \\
+  &\geq \sqrt{ \frac{T}{n} } c_p \sqrt{\log n} 
+\end{split}
+\end{equation*}
+
+où $c_p$ est une constante indépendante de $n$. Cette dernière inégalité est laissée en exercice. \\
+
+\ptitle{Borne supérieure}
+
+\begin{equation*}
+\begin{split}
+  \Vert \sup_{t \in [0,T]} \vert W_t - \overline{W_t} \vert \Vert_p = \sqrt{ \frac{T}{n} } \sqrt{\Vert \max_{k \in \{ 1, \ldots, n\} } \sup_{t \in [k-1,k[} \vert W_t - W_{k-1} \vert^2 \Vert_{ \frac{p}{2}} }
+\end{split}
+\end{equation*}
+
+Par translation, $\sup_{t \in [k-1,k[} \vert W_t - W_{k-1} \vert^2 \stackrel{\mathcal{L}}{=} \sup_{t \in [0,1[} \vert W_t\vert^2 = \varepsilon$\\
+
+Si on est capable de prouver que $\E[e^{\lambda \varepsilon}] < +\infty$ pour $\lambda>0$, alors,
+
+\[ \Vert \max_{k\in \{1,\ldots,n\}} \sup_{t \in [k-1,k[} \vert W_t -W_{k-1} \vert^2 \Vert_{ \frac{p}{2} \leq c_{p,\lambda} } \log(n+1) \]
+
+
+Or, pour $\lambda > 0$,
+
+\begin{equation*}
+\begin{split}
+  \E[e^{\lambda, \varepsilon}] &= \E[e^{\lambda \sup_{t \in [0,1]} \vert W_t \vert^2} ] \\
+  &= \E[e^{\lambda \max(\sup_{t \in [0,1]} (W_t), \sup_{t \in [0,1]} (- W_t))^2} ] \\
+  &\leq \E[e^{\lambda \sup_{t \in [0,1]} (W_t)} + e^{\lambda \sup_{t \in [0,1]} (- W_t))^2} ] \\
+  &\leq 2 \E[e^{\lambda (\sup_{t \in [0,1]} (W_t))^2}] \\
+\end{split}
+\end{equation*}
+car $(-W_t)_{0 \leq t \leq 1}$ a la même loi que $(W_t)_{0 \leq t \leq 1}$. \\
+
+D'après le principe de réflection $\sup_{t \in [0,1]} W_t = \vert W_1 \vert$ (cf TD). Ainsi, 
+
+\begin{equation*}
+\begin{split}
+  \E[e^{\lambda \varepsilon} ] &\leq 2 \E[e^{\lambda W_1^2}] \\
+  &\leq 2 \frac{1}{\sqrt{2\pi}} \int_{\R} e^{\lambda x^2} e^{ \frac{-x^2}{2}} \der x \text{ car } W_1 \sim \Normale(0,1) \\
+  &\leq 2 \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{+\infty} e^{- \frac{1}{2} (1 - 2\lambda)x^2} \der x\\
+  &\leq \frac{2}{\sqrt{1-\lambda}} \underbrace{\frac{1}{\sqrt{2\pi}} \sqrt{1-2\lambda} \int_\R e^{ \frac{-x^2}{2 \left( \frac{1}{\sqrt{1-2\lambda}}\right)^2}}}_1 \der x\\
+  &\leq \frac{2}{\sqrt{1-\lambda}} \\
+\end{split}
+\end{equation*}
+
+Si $\lambda \in [0, \frac{1}{2}]$, on a $\E[ e^{\lambda \varepsilon} ] < +\infty$. On a donc bien une borne supérieure de la forme $c_p \sqrt{\log(n+1)}\sqrt{ \frac{T}{n}}$.
+
+
+\subsubsection{Contrôle de l'erreur dans le cas général}
+On veut contrôler ici $\Vert \sup_{t \in [0,T]} \vert X_t- \bar{X_t} \vert \Vert_p$. Pour cela on va utiliser le lemme intermédiaire suivant.
+
+
+\begin{lem}[Gronwald]
+  Soit $f : \R_+ \to \R_+$ une fonction continue, localement bornée et $\psi : \R_+ \to \R_+$ croissante. Si pour tout $t \geq 0$, pour $\alpha\geq 0$,
+  \begin{equation*}
+  \begin{split}
+    f(t) \leq \alpha \int_{0}^{t} f(s) \der s + \psi(s)
+  \end{split}
+  \label{gronwald}
+  \end{equation*}
+  Alors :
+  \[ \sup_{s \in [0,t]} f(s) \leq e^{\alpha t} \psi(t) \]
+\end{lem}
+
+\Preuve à écrire (cf cours de prépa)
+
+\begin{prop}
+  Si $b$ et $\sigma$ sont lipschitziennes alors pour tout $p \geq 2$, il existe une constante $c_{p}$ telle que 
+  \[ \left\Vert \sup_{t \in [0,T]} \left\vert X_t - \overline{X_t} \right\vert \right\Vert_p \leq c_p \left( \sqrt{ \frac{T}{n}} + 1 \right) \] 
+\end{prop}
+
+On effectue la preuve dans le cas $p=2$. \\
+
+\Preuve notons que $X_t - \overline{X_t} = \int_{0}^{t} (b(X_s) -b(\overline{X_s})) \der s + \int_{0}^{t} (\sigma(X_s) - \sigma(\overline{X_s})) \der W_s$ 
+
+On écrit alors :
+\newcommand{\xsb}{\overline{X_{\underline{s}}}}
+\begin{equation*}
+\begin{split}
+  \E\left[ \sup_{t \in [0,T]} \vert X_t - \overline{X_t} \vert^2 \right] &= \E\left[ \sup_{t \in [0,T]} \left( \int_{0}^{t} b(X_s) - b(\xsb) \der s + \int_{0}^{t} \sigma(X_s) - \sigma(b(\xsb)) \der W_s \right)^2 \right] \\
+  &\leq 2 \E\left[\sup_{t \in [0,T]} \left( \int_{0}^{t} (b(X_s) - b(\xsb) \der s\right)^2\right] + 2 \E\left[\sup_{t \in [0,T]} \left( \int_{0}^{t} (\sigma(X_s) - \sigma(\xsb)) \der W_s\right)^2\right] \\
+  &\text{ en utilisant Cauchy Schwartz} \\
+  &\leq 2T\underbrace{ \E[ \int_{0}^{T}  \vert b(X_s) - b(\xsb) \vert^2 \der s]}_{ \vert b(x) - b(y) \vert \leq c_b \vert x -y \vert \text{ (Lipschitz)} } + 2 \E\left[ \sup_{t \in [0,T]} \left( \int_{0}^{t} (\sigma(X_s) - \sigma(\xsb)) \der W_s \right)^2\right] \\
+  &\leq 2Tc_b^2 \E\left[ \int_{0}^{T}  \vert X_s - \xsb \vert^2 \der s\right] + 2 \E\left[ \sup_{t \in [0,T]} \left( \int_{0}^{t} (\sigma(X_s) - \sigma(\xsb)) \der W_s \right)^2\right]  \\
+  &\text{ par l'inégalité de Doub et par l'isométrie d'Ito, on obtient}  \\
+  &\leq 2Tc_b^2 \E\left[ \int_{0}^{T}  \vert X_s - \xsb \vert^2 \der s\right] + 8\E\left[ \int_{0}^{T} \underbrace{(\sigma(X_s) - \sigma(\overline{X_s}))^2}_{\leq c_\sigma^2 \vert X_s - \overline{X_s} \vert} \der s\right] \\
+  &\leq C \E\left[ \int_{0}^{T} \vert X_s - \overline{X_s} \vert^2 \der s \right] \\
+  &\leq C \left(\E\left[ \int_{0}^{T}  \vert X_s - \overline{X_s} \vert^2 \der s \right] + \E\left[ \int_{0}^{T} \vert \overline{X_s} - \xsb \vert^2 \der s \right]\right) \\
+  &\leq C \int_{0}^{T} \E\left[\sup_{0 \leq u \leq s } \vert X_u - \overline{X_u} \vert^2 \der s \right] +  \E\left[ \int_{0}^{T} \vert \overline{X_s} - \overline{X_s} \vert^2 \der s\right]
+\end{split}
+\end{equation*}
+Par la lemme de \textsc{Gronwald}, sur la première partie de l'inégalité, on trouve le résultat.
+
+\subsection{Autres résultats (plus généraux) sur le schéma d'\textsc{Euler}}
+
+Dans cette section, nous proposons quelques résultats supplémentaires sur les performances du schéma d'\textsc{Euler} sous des hypéothèses légèrement plus faibles.
+On considère l'EDS suivante :
+
+\begin{equation*}
+    \begin{cases}
+      X_0 = x_0 \\
+      \der X_t = b(X_t) \der t + \sigma(X_t) \der W_t
+    \end{cases}
+\end{equation*}
+
+\newcommand{\xt}{X_t}
+\renewcommand{\supt}{\sup_{0 \leq t \leq T}}
+\begin{prop}
+  Si $b$ est $\sigma$ sont à croissance polynomiale, (par exemple, pour tout $x$, $\vert b(x) \vert \leq C(1 + \vert x \vert)$ et $\vert \sigma(x) \vert \leq C(1 + \vert x \vert)$), on a pour tout $p > 0$ 
+  \begin{itemize}
+    \item $\Vert \supt \vert \xt \vert \Vert_p \leq C_{p,T} (1 + \Vert X_0 \Vert_p)$
+    \item $\Vert \supt \vert \overline{\xt^n} \vert \Vert_p \leq C_{p,T} (1 + \Vert X_0 \Vert_p)$
+  \end{itemize}
+\end{prop}
+
+On suppose dans le cas le plus général que $b$ et $\sigma$ ne sont plus homogènes et donc que 
+\newcommand{\wt}{W_t}
+\[ \der \xt = b(\xt,t) \der t + \sigma(\xt,t) \der \wt \]
+
+En ajoutant une hypothèse de régularité, on conserve la convergence du schéma de discrétisation. On suppose donc qu'il exite $\beta \in ]0,1[$ tel que 
+
+\[ \forall (s,t) \in [0,T]^2, \forall x \in \R, \vert b(x,t) - b(x,s) \vert + \vert \sigma(x,t) - \sigma(x,s) \vert \leq C(1+\vert x \vert) \vert t -s \vert^\beta \]
+
+et que (comme dans le cas démontré),
+
+\[ \forall s \in [0,T], \forall (x,y) \in \R^2, \vert b(x,s) - b(y,s) \vert + \vert \sigma(x,s) - \sigma(y,s) \vert \leq C \vert x - y \vert  \]
+
+Alors, pour tout $p > 0$,
+
+\[ \Vert \sup \vert \xt - \overline{\xt^n} \Vert_p \leq C \left( \frac{T}{n} \right)^{\min\left(\beta, \frac{1}{2}\right)} \]
+
+où $(X_t^n)_{0 \leq t \leq T}$ est le schéma d'\textsc{Euler} \og continu \fg{} obtenu de la façon suivante :
+
+\newcommand{\xtkn}{\overline{X_{t_{k}^n}}}
+\newcommand{\xtkpn}{\overline{X_{t_{k+1}^n}}}
+\newcommand{\tkn}{t_k^n}
+\newcommand{\tkpn}{t_{k+1}^n}
+
+\[ \forall k \in \{ 1, \ldots, n \}, \xtkpn = \xtkn + b(\xtkn, t_k^n) \frac{T}{n} + \sigma(\xtkn, t_k^n)\underbrace{\left(W_{t_{k+1}^n} - W_{t_k}^n \right)}_{ \sqrt{ \frac{T}{n} } \varepsilon_{k+1} \text{ où } \varepsilon_{k+1} \sim \Normale(0,1) } \]
+
+
+avec $t_k^n = k \frac{T}{n}$ et pour tout $k \in \{ 1, \ldots n \}$ et tout $t \in ] \tkn, \tkpn [$
+  \renewcommand{\xt}{\overline{X_t}}
+  \[ \xt = \xtkn + b(\xtkn, \tkn)(t -\tkn) + \sigma(\xtkn, \tkn) \left(W_t - W_{\tkn} \right) \]
+
+  \newcommand{\xtn}{\overline{X_T^n}}
+\begin{prop}
+  Dans le cas où on suppose $\sup_{0 \leq t \leq T, x \in \R} \vert \sigma(x,t) \vert < +\infty$, alors pour tout $n \in \N$ et pour tout $\lambda > 0$, pour toute fonction $f$ régulière, 
+  \[ \E[ e^{ \lambda(f(\overline{\xtn}) - \E[f (\xtn)])} ] \leq e^{ \frac{\lambda^2}{2}C_{f,T} K_n} \]
+  où pour tout $n \geq 0, K_n > 0$ et $(K_n)_{n \in \N}$ est décroissante.
+\end{prop}
+
+\subsubsection{Applicaiton à l'obtention d'intervalles de confiance}
+
+    On simule $M \geq 1$ réalisations indépendantes de $\xtn$ : $\left(\overline{X_T^{n,i}}\right)_{1 \leq i \leq M}$ et on estime $\E[f(\xtn)]$ par $ \frac{1}{M} \sum_{i=1}^M f(\overline{X_T^{n,i}})$
+
+On fixe alors $\varepsilon > 0$ et on veut majorer
+
+\renewcommand{\P}{\mathbb{P}}
+
+\[ \P\left( \frac{1}{M} \sum_{i=1}^M f(\overline{X_T^{n,i}}) - \E[f(\xtn)] > \varepsilon \right) \]
+
+Pour tout $\lambda > 0$, en utilisant la croissance de $x \mapsto e^x$,
+
+\begin{equation*}
+\begin{split}
+  \P\left( \frac{1}{M} \sum_{i=1}^M f(\overline{X_T^{n,i}}) - \E[f(\xtn)] \geq \varepsilon \right) &=  \P\left( e^{\lambda \left(\frac{1}{M} \sum_{i=1}^M f(\overline{X_T^{n,i}}) - \E[f(\xtn)]\right)} \geq e^{\lambda \varepsilon} \right) \\
+  &= \P\left( e^{\lambda \left( \sum_{i=1}^M f(\overline{X_T^{n,i}}) - \E[f(\xtn)]\right)} \geq e^{\lambda \varepsilon M} \right) \\
+  &\leq e^{-\lambda \varepsilon M} \E\left[ e^{\lambda \left( \sum_{i=1}^M f(\overline{X_T^{n,i}}) - \E[f(\xtn)]\right)} \right] \\
+  &\leq e^{-\lambda \varepsilon M} e^{ \frac{\lambda^2 M}{2} C_{f,T} K_n } \text{ par indépendance} \\
+\end{split}
+\end{equation*}
+
+On minimise ensuite la fonction $\lambda \mapsto  -\lambda \varepsilon M \frac{\lambda^2 M}{2} C_{f,T} K_n$. Ce minimum est 
+\[ \lambda_0 = \frac{\varepsilon M}{2 \frac{MC_{f,T} K_n}{2}} = \frac{\varepsilon}{C_{f,T} K_n} \]
+
+Finalement, avec ce choix de $\lambda_0$, 
+\begin{equation*}
+\begin{split}
+  \P\left( \frac{1}{M} \sum_{i=1}^M f(\overline{X_T^{n,i}}) - \E[f(\xtn)] \geq \varepsilon \right) &\leq e^{ -\frac{\varepsilon^2}{CK_n} M + \frac{M}{2} \frac{\varepsilon^2}{(CK_n)^2}CK_n } \\
+  &\leq e^{- \frac{\varepsilon^2 M}{2 C K_n} }
+\end{split}
+\end{equation*}
+
+Par symétrie, on obtient la même chose. Ainsi,
+
+
+\begin{equation*}
+\begin{split}
+  \P\left( \left\vert \frac{1}{M} \sum_{i=1}^M f(\overline{X_T^{n,i}}) - \E[f(\xtn)] \right\vert \geq \varepsilon \right) &\leq 2 e^{ -\frac{\varepsilon^2}{CK_n} M + \frac{M}{2} \frac{\varepsilon^2}{(CK_n)^2}CK_n } \\
+  &\leq 2e^{- \frac{\varepsilon^2 M}{2 C K_n} }
+\end{split}
+\end{equation*}
+
+En pratique, on fournit un seuil $\delta \in ]0,1[$, on fixe alors $\varepsilon_\delta$ tel que $\delta = 2e^{- \frac{\varepsilon^2 M}{2 C K_n} }$ et on a, avec probabilité inférieure à $\delta$, 
+
+\[ \left\vert \frac{1}{M} \sum_{i=1}^M f(\overline{X_T^{n,i}}) - \E[f(\xtn)] \right\vert > \varepsilon_\delta \]
+
+On sait donc quantifier l'erreur entre $ \frac{1}{M} \sum_{i=1}^M   f(\overline{X_T^{n,i}})$ et $\E[f(\xtn)]$. Par ailleurs, pour $f$ suffisamment régulière, on peut montrer que :
+
+\begin{equation*}
+\begin{split}
+  \vert \E[f(X_T)] - \E[f(\xtn)] \vert \leq \frac{C}{n^\alpha} + o \left( \frac{1}{n} \right) \text{ pour un } \alpha \in \left]0, \frac{1}{2} \right[
+\end{split}
+\end{equation*}
+
+où $C$ est une constante dépendante de $f$ et $T$.
+
+\section{Schémas d'ordre plus élevé et application à l'estimation}
+
+\newcommand{\xs}{X_s}
+\newcommand{\ws}{W_s}
+
+On peut définir des schémas d'approximation plus fins que le schéma d'Euler en approchant $ \int_{0}^{t} b(\xs) \der s$ et $ \int_{0}^{t} \sigma(\xs)\der \ws$ plus précisément.
+Un schéma très répandu est le schéma de \textsc{Milstein}. On définit une discrétisation de $[0,T]$ par $\tkn = k \frac{T}{n}$ pour $n \geq 1$ et $k \in \{0, \ldots, n \}$.
+
+On introduit alors
+
+\renewcommand{\xtkn}{\widetilde{X_{t_k^n}}}
+\renewcommand{\xtkpn}{\widetilde{X_{t_{k+1}^n}}}
+\newcommand{\wtkpn}{W_{t_{k+1}^n}}
+\newcommand{\wtkn}{W_{t_{k}^n}}
+
+\[
+  \begin{cases}
+    \widetilde{X_0} = x_0 \\
+    \forall k \in \{ 0, \ldots, n-1 \} \, \xtkpn = \xtkn + b(\xtkn) \frac{T}{n} + \sigma( \xtkn) \underbrace{\sqrt{ \frac{T}{n} } \varepsilon_k}_{\wtkpn - \wtkn}  + \frac{\sigma^2(\xtkn)}{2} \frac{T}{n} ( \varepsilon^2_k - 1 )
+  \end{cases}
+\]
+
+où $\varepsilon \sim \Normale(0,1)$. \\
+
+Une version continue de cette discrétisation pour $t \in ] \tkn, \tkpn[$, $k \in \{ 0, \ldots, n-1 \}$ se calcule de façon similaire au schéma d'\textsc{Euler}. Pour des coefficients de l'EDS réguliers (\textsc{Hölder} d'ordre $\beta \in ]0,1[$ par exemple), on obtient un résultat de la forme :
+
+\[ \Vert \supt \vert X_t - \widetilde{X_t^n} \Vert_p \leq C \left( \frac{T}{n} \right)^{ \frac{\beta+1}{2} } \]
+
+\subsubsection{Estimation de paramètres}
+
+\renewcommand{\xtkn}{X_{t_k^n}}
+\renewcommand{\xtkpn}{X_{t_k^n}}
+
+Dans ce cadre, $(X_t)_{0 \leq t \leq T}$ est solution de $\der X_t = b_\theta(\xt) \der t + \sigma_\theta(\xt) \der \wt$ où $\theta \in \R^d$ est un paramètre à estimer. L'objectif en général est d'estimer $\theta$ à partir d'observations $(\xtkn)_{1 \leq k \leq n}$ où $0 \leq t_1^n \leq \ldots \leq t_n^n \leq T$. Une solution très répandue est dé résoudre le problème 
+\[ \hat{\theta_n} \in \arg\max \{ \theta \mapsto \log p_\theta( X_{t_1^n}, \ldots, X_{t_n^n}) \} \]
+
+On sait que pour tout $\theta \in \R^d$ 
+
+\newcommand{\ptheta}{\mathrm{P}_\theta}
+\newcommand{\xtkmn}{X_{t_{k-1}^n}}
+\begin{equation*}
+\begin{split}
+  \log \ptheta(X_{t_1^n}, \ldots, \xtkn) = \sum_{k=1}^n \log \ptheta (\xtkn \vert \xtkmn) \text{ avec} X_{t_0^n} = x_0
+\end{split}
+\end{equation*}
+
+On se propose ensuite de maximiser $\theta \mapsto \frac{1}{n} \sum_{k=1}^n \log \widehat{\ptheta}(\xtkn \vert \xtkmn)$ où $\widehat{\ptheta}(\xtkn \vert \xtkmn)$ est une estimation de $\ptheta(\xtkn\vert\xtkmn)$.
+
+\subsubsection{Cas du schéma d'Euler}
+\newcommand{\tkmn}{t_{k-1}^n}
+$\forall k \in \{1,\ldots,n\}, \widehat{\ptheta}(\,\cdot\, \vert \xtkmn)$ est une densité gaussienne de moyenne $\mu_k^n = \xtkmn + b(\xtkmn)(\tkn - \tkmn)$ et de variance $(\sigma_k^n)^2(\theta) = \sigma_\theta^2(\xtkmn)(\tkn - \tkmn)$. \\
+
+{\fontencoding{U}\fontfamily{futs}\selectfont\char 66\relax} Valide et efficace uniquement lorsque $\dps \supt \vert \tkn - \tkmn \vert  \xrightarrow[n\to +\infty]{} 0$.
+
+\renewcommand{\xt}{X_t}
+\section{Exercices}
+\subsection{Brownian motion}
+\renewcommand{\wt}{W_t}
+Soit $(\wt)_{t \geq 0}$ un mouvement brownien issu de 0.
+
+\begin{enumerate}
+\item 
+  \begin{enumerate}
+    \item On définit $Z_t = W_{t+t_0} - W_{t_0}$ pour tout $t \geq 0$ et un certain $t_0 \geq 0$. Montrons que $Z_t$ est un mouvement brownien. On utilise la propriété \ref{prop_brownien}. Utilisons cette équivalence :
+      \newcommand{\wtt}{W_{t+t_0}}
+      \renewcommand{\wt}{W_{t_0}}
+      \begin{equation*}
+      \begin{split}
+        \E[Z_t] &= \E[ \wtt - \wt] \\
+        &= \E[\wtt] - \E[\wt] \\
+        &= 0
+      \end{split}
+      \end{equation*}
+      De façon immédiate, nous avons $t \mapsto Z_t$ qui est continue et nulle en 0.
+      Par ailleurs, montrons que si $s \leq t$, $\E[Z_sZ_t] = s$.
+
+      \newcommand{\wst}{W_{s+t_0}}
+      \begin{equation*}
+      \begin{split}
+        \E[(\wst - \wt)(\wtt - \wt)] &= \E[\wst \wtt + \wt^2 - \wst\wt - \wt\wtt] \\
+        &= \E[\wst\wtt] + \E[\wt^2] - \E[\wst\wt] - \E[\wt\wtt] \\
+        &= s + t_0 + t_0 - t_0 -t_0 \\
+        &= s
+      \end{split}
+      \end{equation*}
+      Par linéarité, $(Z_t)_{t \geq 0}$ est un processus gaussien. On en déduit donc que $(Z_t)_{t\geq 0}$ est un mouvement brownien.
+    \item On définit $\left(\widetilde{Z_t} = \alpha W_{ \frac{t}{\alpha^2}}\right)_{t \geq 0}$. C'est un processus gaussien par linéarité, centré, nul en 0 et à trajectoires continues (par composition).
+      \renewcommand{\ws}{W_{\frac{s}{\alpha^2}}}
+      \renewcommand{\wt}{W_{\frac{t}{\alpha^2}}}
+      Ensuite, pour tout $(s,t) \in \R^2$, tel que $s \leq t$, 
+      \begin{equation*}
+      \begin{split}
+        \E[\widetilde{Z_s}\widetilde{Z_t}] &= \E\left[\left(\alpha\ws\right)\left(\alpha\wt\right)\right] \\
+        &= \alpha^2 \E\left[\ws\wt\right] \\
+        &= \alpha^2 \frac{s}{\alpha^2} = s = s\wedge t
+      \end{split}
+      \end{equation*}
+      Ainsi $(\widetilde{Z_t})_{t \geq 0}$ est donc bien un mouvement brownien.
+  \end{enumerate}
+    \item Soit $0 \leq s \leq t$.
+      \renewcommand{\wt}{W_t}
+      \renewcommand{\ws}{W_s}
+
+      \begin{equation*}
+      \begin{split}
+        \E[\ws\wt^2] &= \E[\ws(\wt - \ws + \ws)^2] \\
+        &= \E[\ws(\wt-\ws)^2] + 2\E[\ws^2(\wt - \ws)] + \E[\ws^3] \\
+        &= \E[\ws]\E[(\wt-\ws)^2] + 2\E[\ws^2] \E[\wt-\ws] + \E[\ws^3] \text{ car } \wt-\ws \text{ est indépendant de } \ws \\
+        &= 0 + 0 + 0\\
+        &= 0
+      \end{split}
+      \end{equation*}
+      Rappel : les moments impaire d'une gaussienne centré sont nuls. \\
+
+      Ensuite,
+      \begin{equation*}
+      \begin{split}
+        \E[\wt\vert\ws] &= \E[\wt - \ws + \ws \vert \ws] \\
+        &= \E[\wt - \ws \vert \ws] + \E[\ws \vert \ws] \\
+        &= \E[\wt - \ws \vert \ws] + \ws \text{ car } \wt - \ws \text{ est indépendant de } \ws \\
+        &= \ws
+      \end{split}
+      \end{equation*}
+      Enfin, pour le dernier calcul,
+      \renewcommand{\wu}{W_u}
+      \begin{equation*}
+      \begin{split}
+        \E[(\wt-\ws)^2 Y] &= \E\left[\E[(\wt-\ws)^2 Y \vert \sigma(\{\wu\}_{0\leq u \leq s})]\right] \\
+        &= \E[Y\E[(\wt-\ws)^2 \vert \sigma(\{\wu\}_{0\leq u \leq s})]] \\
+        &= \E[Y \E[(\wt - \ws)^2]] \text{ car } \wt - \ws \text{ est indépendant de }\sigma(\{\wu\}_{0\leq u \leq s})\\
+        &= \E[Y(t-s)] \\
+        &= (t-s)\E[Y]
+      \end{split}
+      \end{equation*}
+    \item On dipose de deux browniens indépendants. $(Z_t)_{t\leq 0}$ est un processus gaussien, centré, à trajectoires continues, nul en 0, par combinaison linéaire de $(B_t)_{t\leq 0}$, $(W_t)_{t \leq 0}$ et de $\rho$ qui est connu. \\
+
+      \newcommand{\bs}{B_s}
+      \newcommand{\bt}{B_t}
+      Soit $(s,t) \in \R^2$, tel que $s \leq t$. Alors
+      \begin{equation*}
+      \begin{split}
+        \E[Z_sZ_t] &= \E[(\rho\ws+\sqrt{1-\rho^2}\bs)(\rho\wt+\sqrt{1-\rho^2}\bt)] \\
+        &= \rho^2 \E[\ws\wt] + (1-\rho^2)\E[\bt\bs] + \rho\sqrt{1-\rho^2} \E[\ws\bt + \wt\bs]\\
+        &= \rho^2s + (1-\rho^2)s + 0 \text{ car } W \text{ et } B \text{ sont indépendants}\\
+        &= s
+      \end{split}
+      \end{equation*}
+\end{enumerate}
+
+\subsection{Brownian bridge}
+\newcommand{\bt}{B_t}
+\newcommand{\bs}{B_s}
+
+Soit $(\bt)_{t \geq 0}$ un processus gaussien centré et tel que pour tout $(s,t) \in [0,1]^2$, $\E[\bt\bs] = s \wedge t - st$. C'est la loi d'un brownien dont on sait qu'il se termine d'une certaine valeur en 1.
+\begin{enumerate}
+  \item Soit $(\widetilde{B_t})_{0 \leq t \leq 1}$ tel que $\forall 0 \leq t \leq 1$, $\widetilde{B_t} = B_{1-t}$.
+    \newcommand{\tilbt}{\widetilde{B_t}}
+    \newcommand{\tilbs}{\widetilde{B_s}}
+    $\widetilde{B}$ est un processus gaussien et centré. On sait donc que sa loi est caractérisé uniquement par sa moyenne et sa variance. On sait donc, en calculant ces valeurs, qu'il aura la même loi que $B$. Ainsi, pour tout $(s,t) \in [0,1]^2$ tel que $s \leq t$, 
+    \renewcommand{\bt}{B_{1-t}}
+    \renewcommand{\bs}{B_{1-s}}
+    \begin{equation*}
+    \begin{split}
+      \E[\tilbs \tilbt] &= \E[\bs\bt] \\
+      &= (1-t) \wedge (1-s) - (1-t)(1-s) \\
+      &= 1-t - (1-t)(1-s) \\
+      &= s(1-t) \\
+      &= s - st \\
+      &= s \wedge t -st
+    \end{split}
+    \end{equation*}
+  \item \Rq Il y a un $Z$ dans l'énoncé mais non définit. Petite typo dans l'énoncé, on va voir où cela va nous amener :-) \\
+
+    \newcommand{\tilwt}{\widetilde{W_t}}
+    \newcommand{\tilws}{\widetilde{W_s}}
+      \renewcommand{\wt}{W_t}
+      \renewcommand{\ws}{W_s}
+    Si $(W_t)_{0 \leq t \leq 1}$ est un mouvement brownien, on définit $(\tilwt = W_t - tW_1)_{0 \leq t \leq 1}$. $(\tilwt)_{0 \leq t \leq 1}$ est un processus gaussien, centré comme $(\wt)_{t \in [0,1]}$. Pour $(s,t) \in [0,1]^2$, $s \leq t$.
+    \begin{equation*}
+    \begin{split}
+      \E[\tilwt\tilws] &= \E[(\wt - tW_1)(\ws - sW_1)] \\
+      &= \E[\wt\ws] - s\E[\wt W_1] - t\E[W_1 \ws] + st\E[W_1^2] \\
+      &= s - st -st +st \text{ le dernier terme égal à 1 car } W_1 \sim \Normale(0,1) \\
+      &= s - st \\
+      &= s \wedge t - st
+    \end{split}
+    \end{equation*}
+    $(\tilwt)_{0 \leq t \leq 1}$ a bien la même loi que $(\bt)_{t \in [0,1]}$.
+\end{enumerate}
+
+\subsection{Reflection principle - simulation of a first passage time - Loi du temps d'attente}
+\newcommand{\st}{S_t}
+Soit $(\wt)_{t \geq 0}$ un mouvement brownien, $\dps S_t = \sup_{0 \leq s \leq t} W_s$. Soient $a \leq b$, tel que $b>0$ et on cherche à prouver que 
+\[ \P(\st \geq b; \wt \leq a) = \P(\wt \geq 2b-a) \]
+
+\newcommand{\fs}{\mathcal{F}_s}
+On introduit $\tau_b = \inf\{s \geq 0; W_s \geq b\}$ et $\fs = \sigma((W_u)_{0 \leq u \leq s})$. On peut alors écrire :
+
+\newcommand{\wtb}{W_{\tau_b}}
+\begin{equation*}
+\begin{split}
+  \P(\st \geq b; \wt \leq a) &= \P(\tau_b \leq t; \wt \leq a) \\
+  &= \P(\tau_b \leq t; \wt - \wtb \leq a - \wtb) \\
+  &= \P(\tau_b \leq t; \wt - \wtb \leq a-b) 
+\end{split}
+\end{equation*}
+On utilise alors le fait que le mouvement brownien vérifie la propriété de \textsc{Markov} forte (c'est dire que la loi du brownien sachant tout son passé est égal à la loi du brownien son passé sachant son passé au dernier temps). On peut donc dire que le processus $(Z_t = W_{t+\tau_b} - \wtb)_{t \geq 0}$ est un processus gaussien indépendant de $\tau_b$.
+
+Ainsi,
+\begin{equation*}
+\begin{split}
+  \P(\st \geq b; \wt \leq a) &= \P(\tau_b \leq t ; Z_{_t-\tau_b} \leq a-b) \\
+  &= \P(\tau_b \leq t; - Z_{t- \tau_b \leq a-b}) \text{ (car événements indép. et symétrie de la gaussienne centré)} \\
+  &= \P(\tau_b \leq t; - \wt \leq a - 2b) \\
+  &= \P(\tau_b \leq t; \wt \geq 2b-a)  \\
+  &= \P(\wt \geq 2b-a) \text{ car } \{ \wt \geq 2b-a \} \subset \{ Z_b \leq t \} \text{ lorsque } a \leq b
+\end{split}
+\end{equation*}
+
+Ensuite, pour tout $b\geq 0$, 
+
+\begin{equation*}
+\begin{split}
+  \P(\st \geq b) &= \P(\st \geq b; \wt \geq b) + \P(\st \leq b; \wt \leq b) \\
+  &= \P(\wt \geq b) + \P(\wt \geq 2b-b) \\
+  &= \P\wt \geq b) + \P(- \wt \geq b) \\
+  &= \P(\vert \wt \vert \geq b)
+\end{split}
+\end{equation*}
+On veut trouver la densité de la loi du temps d'arrêt $\tau_b = \inf \{ t \geq 0; \wt \geq b \}$ avec $b > 0$. 
+
+Soit $t \geq 0$,
+\begin{equation*}
+\begin{split}
+  \P(\tau_b \leq t) &= \P(\st \geq b) \\
+  &= \P(\vert \wt \vert \geq b) \\
+  &= \P(\wt^2 \geq b^2) \\
+  &= \P((\wt-W_0)^2 \geq b^2) 
+\end{split}
+\end{equation*}
+Or, $\wt - W_0 \sim \Normale(O,t)$ donc $\sqrt{t}(W_1 - W_0) \overset{\mathcal{L}}{=} \wt - W_0$.
+D'où,
+\begin{equation*}
+\begin{split}
+  \P(\tau_b \leq t) &=  \P(t W_1^2 \geq b^2) \\
+  &= \P\left(W_1^2 \geq \frac{b^2}{t}\right)
+\end{split}
+\end{equation*}
+
+On cherche à calculer $\dps \frac{\partial}{\partial t}\left(\P(W_1^2 \geq \frac{b^2}{t} \right)$.
+
+\begin{equation*}
+\begin{split}
+  \frac{\partial}{\partial t}\left(\P(W_1^2 \geq \frac{b^2}{t} \right) &= \frac{\partial}{\partial t} \int_{ \frac{b^2}{t}}^{+\infty} f_{W_1^2}(u) \der u \\
+  &= \frac{2}{\sqrt{2\pi}} \frac{\partial}{\partial t} \int_{ \frac{b^2}{t}}^{+\infty} e^{- \frac{x^2}{2}} \der x \\
+  &= \frac{1}{\sqrt{2\pi}} e^{ - \frac{b^2}{2t}} b t^{-3/2}
+\end{split}
+\end{equation*}
+
+\subsection{Simulation of the maxium of a Brownian motion - Loi du maximum du pont brownien}
+\renewcommand{\ws}{W_s}
+\newcommand{\supu}{\sup_{0 \leq s \leq t}}
+
+\begin{enumerate}
+\item Soit $(x,y) \in \R^2$, tel que $y \geq \max(0,x)$. On cherche $\dps \P\left(\supu \ws \geq y \vert \wt = x\right)$. Grâce à l'exercice 3, on peut écrire que
+\begin{equation*}
+\begin{split}
+  \P(\supu\ws\geq y \vert \wt = x) &= \lim_{\delta \to 0} \frac{(\P(\wt \geq 2y - x - \delta) - \P(\wt \geq 2y -x))/\delta}{\left(\P(\wt \leq x + \delta) - \P(\wt \leq x)\right)/\delta} \\
+  &= \frac{ \frac{1}{\sqrt{2\pi}}e^{- \frac{1}{2t}(2y-x)^2}}{ \frac{1}{\sqrt{2\pi}} e^{- \frac{1}{2t} x^2}} \\
+  &= e^{- \frac{1}{2t}(4y^2 - 4xy)} \\
+  &= e^{- \frac{2y}{t}(y-x)}
+\end{split}
+\end{equation*}
+
+\item $\P(Z \geq y) = e^{- \frac{2y}{t}(y-x)}$ pour $y \geq 0 \forall x$. La fonction de répartition de $Z$ est donnée par $F_Z(y) = \P(Z \leq y ) - 1 - e^{- \frac{2y}{t}(y-x)}$. Alors si $U \sim \mathcal{U}([0,1])$, $F_Z^{-1}(u)$ a la même loi que $Z$.
+\end{enumerate}
+
+\section{Exercices supplémentaires}
+
+\begin{exo}
+On considère l'EDS linéaire suivante :
+
+  \[ \der \xt = a_t \xt \der t + b_t \der t + c_t \der \wt \]
+  avec $a,b$ et $c$ des fonctions continues de $[0,T]$ dans $\R$ et $W$ un mouvement brownien réel. On note $\dps A_t = \int_{0}^{t} a_s \der s$ et on introduit $Y_t = e^{-A_t} \xt$. 
+\begin{enumerate}
+\item Déterminez l'EDS vérifiée par $(Y_t)_{0 \leq t \leq T}$
+  \item Calculer l'espérance de $\xt$
+  \item Calculer la covariance $\forall (t_1, t_2) \geq 0$ $\cov(X_{t_1}, X_{t_2})$.
+\end{enumerate}
+\end{exo}
+
+\begin{enumerate}
+\item On introduit la fonction $f : (t,x) \mapsto e^{-A_t}x$ et on applique la formule d'\textsc{Itô} à $Y_t = f(t,X_t)$. Pour rappel :
+
+\begin{prop}[Itô]
+Soit $X_t = \varphi(t,\psi_t)$ un processus, où $\varphi$ est une fonction de classe $\mathcal{C}^2$ allant de $\R^2$ dans $\R$, et $\psi_t$ un mouvement brownien.
+On a alors :
+$\ud X_t = \left(\dfrac{\partial }{\partial t}\varphi(t,\psi_t) + \dfrac{1}{2}\dfrac{\partial^2}{\partial y^2}\varphi(t,\psi_t)\right) \ud t + \dfrac{\partial}{\partial y}\varphi(t,\psi_t) \ud \psi_t $
+\end{prop}
+
+Alors, étant donné que $\partial_{xx} f(t,x) = 0$ et $\dps\frac{\partial^2}{\partial x^2} f(t,x) = 0 $
+
+\begin{equation*}
+\begin{split}
+  \der Y_t &= \frac{\partial}{\partial t} f(t,\xt) \der t + \frac{\partial}{\partial x}f(t,\xt) \der \xt \\
+  &= -a_t e^{-A_t} \xt \der t + e^{-A_t} \der \xt \\
+  &= -a_t e^{-A_t} \xt \der t + e^{-A_t} \left( a_t \xt \der t + b_t \der t + c_t \der \wt \right) \\
+  &= e^{-A_t} b_t \der t + e^{-A_t} c_t \der \wt
+\end{split}
+\end{equation*}
+
+Ainsi, pour tout $t \geq 0$,
+
+\begin{equation*}
+\begin{split}
+  Y_t = Y_0 + \int_{0}^{t} e^{-A_s} b_s \der s + \int_{0}^{t} e^{-A_s} c_s \der \ws
+\end{split}
+\end{equation*}
+et 
+\begin{equation*}
+\begin{split}
+  X_t &= e^{A_t}Y_t \\
+  &= e^{A_t}\left(X_0 + \int_{0}^{t} e^{-A_s} b_s \der s + \int_{0}^{t} e^{-A_s} c_s \der \ws\right)
+\end{split}
+\end{equation*}
+
+\underline{\textbf{Application :}} Processus d'\textsc{Ornstein-Ulhenbeck} :
+\[ 
+\begin{cases}
+  a_t = -1 \\
+  b_t = \mu \in \R \\
+  c_t = \sigma \\
+  \der \xt = (\mu - \xt) \der t + \sigma \der \wt
+\end{cases}
+\]
+
+
+\item On a
+  \begin{equation*}
+  \begin{split}
+    \E[\xt] &= e^{A_t}\E[Y_t] \\
+    &= e^{A_t}( \E[X_0] + \underbrace{\E\left[ \int_{0}^{t} e^{-A_s} b_s \der s\right]}_{\text{espérance d'une constante}} + \underbrace{\E\left[ \int_{0}^{t} e^{-A_s} c_s \der \ws\right]}_{0} \\
+    &= e^{A_t}\left(\E[X_0] + \int_{0}^{t} e^{-A_s} b_s \der s\right)
+  \end{split}
+  \end{equation*}
+  
+\item Sans perte de généralité, on pose $X_0 = 0$. $\forall (t_1, t_2) \geq 0$
+  \newcommand{\tu}{t_1}
+  \newcommand{\td}{t_2}
+  \begin{equation*}
+  \begin{split} 
+    \cov(X_{\tu}, X_{\td}) &= \cov \left( \int_{0}^{\tu} e^{A_{\tu} -A_s}c_s \der \ws, \int_{0}^{\td} e^{A_{\td} - A_s} \right) \\
+    &= sqfdfd
+  \end{split}
+  \end{equation*}
+
+\end{enumerate}
+
+\chapter{Chaînes de Markov cachées}
+
+On considère une variable aléatoire $X$ à valeurs dans $\{\omega_1, \omega_2 \}$, dont les valeurs sont cachées. On considère une autre variable aléatoire $Y$ à valeurs dans $\R$, dont les valeurs sont observables. \\
+
+\section{Position du problème}
+
+On cherche à estimer la valeur cachée $\omega$ du paramètre. Etant donné que l'on souhaite estimer la valeur cachée de $\omega$, nous allons avoir besoin d'un estimateur.
+Cet estimateur s'appellera \og stratégie de classification \fg{} et les valeurs cachées les \og classes \fg{}. D'une manière générale, nous utilisons l'estimateur du maximum de vraisemblance. Le principe est le suivant :
+
+Soit une famille paramétrique de distributions de probabilités $D_\theta$ dont les éléments sont associés soit à une densité de probabilité connue (distribution continue), soit à une fonction de masse connue (distribution discrète), notée $f(x \vert \theta)$. 
+On tire un échantillon de $n$ valeurs $x_1, x_2, \ldots, x_n$ de la distribution, et l'on calcule la densité de probabilité associée aux données observées :
+
+\[ {\displaystyle f_{\theta }(x_{1},\dots ,x_{n};\theta )=\prod _{i=1}^{n}f(x_{i}\mid \theta )\,} \]
+
+Ceci étant une fonction de $\theta$ avec $x_1, \ldots, x_n$  fixés, c'est une vraisemblance.
+
+\[  {\displaystyle L(\theta )=f_{\theta }(x_{1},\dots ,x_{n};\theta )\,} \]
+
+Lorsque $\theta$ n'est pas observable, la méthode du maximum de vraisemblance utilise les valeurs de $\theta$ qui maximisent $L(\theta)$ estimateur de $\theta$ : c'est l'estimateur du maximum de vraisemblance de $\theta$ noté ${\displaystyle {\widehat {\theta }}}$. Par exemple dans le cas du produit discret, on effectue un tirage de $n$ valeurs, il faut donc trouver le paramètre qui maximise la probabilité d'avoir tiré ce tirage.
+L'estimateur du maximum de vraisemblance est un estimateur (statistique) utilisé pour inférer les paramètres de la loi de probabilité d'un échantillon donné.
+
+\begin{definition}[EMV]
+
+Soit $X$ une variable aléatoire réelle, de loi discrète ou continue, dont on veut estimer un paramètre $\theta$. On note $ {\mathcal {D}}_{\theta }$ cette famille de lois paramétriques. Alors on définit une fonction $f$ telle que :
+  \[
+        {\displaystyle f(x;\theta )={\begin{cases}f_{\theta }(x)&{\text{si }}X{\text{ est une v.a. continue}}\\P_{\theta }(X=x)&{\text{si }}X{\text{ est une v.a. discrète}}\end{cases}}} 
+  \]
+
+    $ f_{\theta }(x)$ représente la densité de $X$ (où $\theta$ apparaît) et  $P_{\theta }(X=x)$ représente une probabilité discrète (où $\theta$ apparaît).
+
+On appelle vraisemblance de $\theta$ au vu des observations $(x_{1},\ldots ,x_{i},\ldots ,x_{n})$ d'un $n$-échantillon indépendamment et identiquement distribué selon la loi $ {\mathcal {D}}_{\theta }$, le nombre :
+
+    \[  {\displaystyle L(x_{1},\ldots ,x_{i},\ldots ,x_{n};\theta )=f(x_{1};\theta )\times f(x_{2};\theta )\times \ldots \times f(x_{n};\theta )=\prod _{i=1}^{n}f(x_{i};\theta )} \]
+\end{definition}
+On cherche à trouver le maximum de cette vraisemblance pour que les probabilités des réalisations observées soient aussi maximum.
+
+Ici, $\P(\cdot \, \vert \omega_i)$ est une probabilité dite \og a priori \fg{} tandis que $\P( \cdot \, \vert Y)$ est une probabilité \og a posteriori \fg{}
+
+\subsection{Approche baysienne}
+
+D'une manière générale, on parle d'une approche \og bayesienne \fg{} si une connaissance \og a priori \fg{} sur les paramètres est modélisée par une loi de probabilité sur l'ensemble des paramètres.
+
+On cherche un lien entre ces deux variables. Il y a deux liens \og extrêmes possibles \fg{} :
+\begin{itemize}
+\item les variables aléatoires sont indépendantes
+  \item les variables aléatoires sont liées de manières déterministes
+\end{itemize}
+
+D'une manière générale, on étudie la loi jointe $\P_{(X,Y)}$. Notons $h(x,y)$ la densité de cette loi jointe. Faisons queleques rappels de calculs :  
+\begin{itemize}
+  \item $\P_X : \, f(x) = \int_{\R} h(x,y) dy$
+  \item $\P_Y : \, f(y) = h(\omega_1, y) + h(\omega_2, y)$
+  \item $\P(X\vert Y) = \frac{h(x,y)}{f(y)}$
+\end{itemize}
+
+Ainsi, $h(x,y) = \P(x)\P(Y\vert X)$. \\
+
+Notons $\widehat{s}$ notre stratégie de classification (c'est notre estimateur). Pour évaluer notre estimateur, nous calculons l'erreur de notre estimation à travers une fonction de perte. En effet, notre estimateur peut nous donner une bonne réponse ou se tromper. On peut supposer que les différentes erreurs ne sont pas de gravité équivalente. Dans ce cas là, on modifie ces différences par la fonction de perte suivante :
+
+\[
+  L(\omega_i, \omega_j) = \begin{cases}
+    0 \text{ si } \omega_i \neq \omega_j \\
+    \lambda_{ij} \text{ sinon}
+  \end{cases}
+\]
+
+\Rq les $\lambda_{ij}$ sont définis de manière subjectif. Cela dépend de notre problème et de ce que nous définissions comme une erreur de classification.
+
+Pour mesurer la qualité de notre estimateur (que l'on appelle aussi stratégie de classfication) à l'aide de $n$ observations, en calculant la perte moyenne $\E[L(\widehat{s}(Y), X)]$. Cette valeur est approchée par :
+
+\[ \frac{L(\widehat{s}(y_1),x_1) + \ldots +L(\widehat{s}(y_n),x_n) }{n} \]
+
+Par la loi des grands nombres, ce dernier tend bien vers $\E[L(\widehat{s}(Y), X)]$. Finalement on définit la stratégie bayésienne $\widehat{s}_B$.
+
+\begin{definition}[Stratégie Bayésienne]
+  On appelle stratégie bayésienne la stratégie de classification $\widehat{s}_B$ qui vérifie 
+
+  \[ \E[ L( \widehat{s}_B(Y), X) ] = \min_s \E[ L( \widehat{s}(Y), X) ] \]
+\end{definition}
+
+\section{Chaînes de Markov cachées}
+
+Une chaîne de \textsc{Markov} cachée est un processus à temps discret doublement stochastique, c'est à dire composé de deux processus $X = (X_n)_{n \in \N}$ et $Y = (Y_n)_{n \in \N}$. On suppose que $X$ est une chaîne de \textsc{Markov} et nous supposons que $Y$ est réel. Ici, on parle d'une chaîne de \textsc{Markov} \og cachée \fg{} signifie que les réalisations de $X$ sont inobservables. On cherche alors à estimer $X$ à partir de la réalisation observée $Y$.
+
+\begin{definition}
+  $\P_{(X,Y)}$ est une chaîne de \textsc{Markov} cachée si 
+  \[ h(x,y) = \P(x)\P(y \vert x) = \P(x_1)\P(x_2 \vert x_1) \ldots \P(x_n \vert x_{n-1}) \P(y_1 \vert x_1) \ldots \P(y_n \vert x_n) \]
+  où 
+  \begin{itemize}
+    \item $X$ est une chaîne de \textsc{Markov}
+    \item les $(y_k)$ indépendants conditionnellement à $X = x_j$
+    \item $\P(y_i \vert x_1,\ldots,x_n) = \P(y_i \vert x_i)$
+  \end{itemize}
+\end{definition}
+
+\subsection{Représentation graphique des dépendances}
+
+On considère une famille de finie de variables $U = (U_s)_{s \in S}$. On peut représenter les liens de dépendances entre ces différentes variables aléatoires $(U_s)_{s \in S}$. S'il existe une arête entre entre $U_i$ et $U_j$ on ne peut rien dire, S'il n'existe pas d'arête, alors $U_i$ et $U_j$ sont indépendantes.
+
+\subsection{Modèle de chaîne de \textsc{Markov} cachée}
+
+Petit calcul : sachant que l'on connaît $\P(x_i, y_1, \ldots, y_n)$, peut-on trouver $\P(x_i \vert y_1, \ldots, y_n)$, $\forall i\in \{1,\ldots,n\}$. La réponse est oui. Montrons cela.
+
+%\begin{equation*}
+%\begin{split}
+%  \P(x_i \vert y_1,\ldots, y_n) &= \frac{\P(x_i, y_1, \ldots, y_n)}{\P(y_1,\ldots,y_n)} \\
+%  &= \frac{\P(x_i, y_1, \ldots, y_n)}{\sum_{x_i} \P(x_i, y_1,\ldots,y_n)}  \\
+%\end{split}
+%\end{equation*}
+
+On note $\alpha_i(x_i) = \P(x_i, y_1, \ldots, y_i)$ et $\beta_i(x_i) = \P(y_{i+1}, \ldots, y_n \vert x_i)$.
+Montrons que $\P(x_i \vert y_1,\ldots, y_n) = \alpha_i(x_i)\beta_i(x_i)$ \\
+
+On utilise le fait que $\P(a,b) = \P(a) \P(b \vert a) = \P(b) \P(a \vert b)$. On note sur le graphe suivant $a$ en vert et $b$ en rouge. Le tout correspond à $a$ et $b$.
+\begin{equation*}
+\begin{split}
+  \P( \underbrace{x_i, y_1,\ldots,y_i}_{a},\underbrace{\ldots,y_n}_b) &= \P(x_i,y_1,\ldots,y_i) \P(y_{i+1},\ldots,y_n \vert x_i, y_1,\ldots,y_i) \\
+  &= \alpha_i(x_i)  \P(y_{i+1},\ldots,y_n \vert x_i, y_1,\ldots,y_i) \\
+  &= \alpha_i(x_i)  \P(y_{i+1},\ldots,y_n \vert x_i) \text{ par indépendance vis à vis des } y_1,\ldots,y_n\\
+  &= \alpha_i(x_i) \beta_i(x_i)  \\
+\end{split}
+\end{equation*}
+
+Maintenant, comment passer de $\alpha_i(x_i)$ à  $\alpha_{i+1}(x_{i+1})$?
+\newcommand{\sumx}{\sum_{x_i \in \Omega}}
+\begin{equation*}
+\begin{split}
+  \alpha_{i+1}(x_{i+1}) &= \P(x_{i+1},y_1,\ldots,y_{i+1}) \\
+  &= \sumx \P(x_i,x_{i+1}, y_1, \ldots, y_{i+1}) \text{ (probabilité totale)} \\
+  &= \sumx \P(x_i, y_1,\ldots,y_n) \P(x_{i+1},y_{i+1} \vert y_1,\ldots, y_n, x_i) \\
+  &= \sumx \alpha_i(x_i) \P(x_{i+1}, y_{i+1} \vert x_i) \text{ par indépendance conditionnelle des } y_k \\
+  &= \sumx \alpha_x(x_i) \P(y_{i+1} \vert x_i, x_{i+1}) \P(x_{i+1}\vert x_i) \\
+  &= \sumx \alpha_i(x_i) \P(y_{i+1}\vert x_{i+1}) \P(x_{i+1} \vert x_i) 
+\end{split}
+\end{equation*}
+
+Enfin, on pose $\beta_n(x_n) = 1$. Comment passer de $\beta_{i+1}(x_{i+1})$ à $\beta_i(x_i)$ ?
+
+\renewcommand{\sumx}{\sum_{x_{i+1} \in \Omega}}
+\begin{equation*}
+\begin{split}
+  \beta_{i}(x_{i}) &= \P(y_{i+1},\ldots,y_n\vert x_{i}) \\
+  &= \sumx \P(x_{i+1}, y_{i+1},\ldots,y_n\vert x_{i}) \\
+  &= \sumx \P(x_{i+1}\vert x_i)\P(y_{i+1},\ldots,y_n\vert x_{i}, x_{i+1}) \\
+  &= \sumx \P(x_{i+1}\vert x_i)\P(y_{i+1},\ldots,y_n\vert x_{i+1}) \text{ 3ème propriété de la définition d'une CMC} \\
+  &= \sumx \P(x_{i+1}\vert x_i) \P(y_{i+1} \vert x_{i+1}) \P(y_{i+2},\ldots,y_n\vert x_{i+1})  \\
+  &= \sumx \P(x_{i+1}\vert x_i) \P(y_{i+1} \vert x_{i+1}) \beta_{i+1}(x_{i+1})
+\end{split}
+\end{equation*}
+
+Nous souhaitons démontrer l'équivalence suivante :
+
+\[ \widehat{s_B}^b(y_1,\ldots,y_n) = (\widehat{x_1}, \ldots, \widehat{x_n}) \Leftrightarrow \widehat{x_i} = \arg \max_{x_i} \P(x_i\vert y_1,\ldots,y_n) \]
+
+On note pour cela $L(x^1, x^2) = \sum_{i=1}^n \mathbbm{1}_{[x_i^1 \neq x_i^2]}$. On cherche déjà notre estimateur bayésien. Pour cela, on calcule l'espérance de la fonction de perte et
+on cherchera à minimiser cette espérance.
+
+\begin{equation*}
+\begin{split}
+  \E[L(\widehat{s(Y)},X)] &= \E\left[ \sum_{i=1}^n \mathbbm{1}_{[\widehat{X_i}(Y) \neq X_i]} \right] \\
+   &= \sum_{i=1}^n \underbrace{\E\left[ \mathbbm{1}_{[\widehat{X_i}(Y) \neq X_i]} \right]}_{\E\left[\E\left[ \mathbbm{1}_{[\widehat{X_i}(Y) \neq X_i]} \right]\vert Y=y \right]} \\
+   &= \sum_{i=1}^n \P\left[ {[\widehat{X_i}(y) \neq X_i]} \vert Y=y \right] \\
+\end{split}
+\end{equation*}
+
+\chapter{Mélanges de lois et classification non supervisée}
+
+Comme dans le chapitre précédent, on considère deux variables aléatoires $X$ à valeurs discrètes $\{F, G \}$ et Y à valeurs dans $\R$. Le problème consiste à trouver une estimation $X$ que l'on note $\widehat{x}$ sachant $Y=y$. D'après ce que nous avons vu au chapitre précédent, c'est possible à l'aide de $h(x,y) = \P(x)\underbrace{\P(y \vert x)}_\text{gaussienne}$. On note la stratégie bayésienne :
+
+\[\widehat{s}(y) = 
+  \begin{cases}
+    F \text{ si } \P(F)\P(Y \vert F) \geq \P(G) \P(Y \vert G ) \\
+    G \text{ si } \P(F)\P(Y \vert F) \leq \P(G) \P(Y \vert G )
+  \end{cases}
+\]
+où $\P(F) = \Pi_F$ et $\P(G) = \Pi_G$. On considère ces observations correspondant à la taille d'un individu en mètre :
+\begin{center}
+\begin{tabular}{llll}
+  1.56 & 1.75 & 1.68 & 1.80 \\
+$y_1$ & $y_2$ & $y_3$ & $y_4$
+\end{tabular}
+
+\end{center}
+
+Il s'agit d'estimer les paramètres $\theta = (\Pi_F, \Pi_G, m_F, m_G, \sigma^2_F, \sigma^2_G)$. On souhaite savoir si, grâce à ces observations, on peut classer ces individus (est-ce une fille ou un garçon ?). Sans ces paramètres, la tâche s'avère être impossible.
+
+Pour estimer ces paramètres, la méthode des moments ainsi que la méthode du maximum de vraisemblance sont impossibles. Nous allons introduire de nouvelles méthodes pour estimer ces paramètres.
+
+\section{Méthode SEM}
+Si les $x_1,\ldots,x_n$ étaient observés : $\widehat{\Pi_F}(x_1,\ldots,x_n,y_1,\ldots,y_n) = \frac{ \text{Nombre de filles}}{\text{Nombre de personne totale}}$. Il suffit juste de compter. Mathématiquement, 
+\[ \widehat{\Pi_F}(x_1,\ldots,x_n,y_1,\ldots,y_n) = \frac{1}{n} \sum_{i=1}^{n} \mathbbm{1}_{[x_i=F]} \]
+
+De même, pour avoir la moyenne, nous faisons :
+
+\[ \widehat{m_F}(x_1,\ldots,x_n,y_1,\ldots,y_n) = \frac{\sum_{i=1}^{n} y_i\mathbbm{1}_{[x_i=F]}}{\sum_{i=1}^n \mathbbm{1}_{[x_i = F]}} \]
+
+Enfin, pour la variance
+\[ \widehat{\sigma^2_F}(x_1,\ldots,x_n,y_1,\ldots,y_n) = \frac{\sum_{i=1}^{n} (y_i-\widehat{m}_F)^2 \mathbbm{1}_{[x_i=F]}}{\sum_{i=1}^n \mathbbm{1}_{[x_i = F]}} \]
+
+Dans notre problème, nous n'avons la possibilité d'observer $x_i$. Nous utilisons alors la méthode SEM :
+\begin{enumerate}
+\item On dispose de $\widehat{\theta}(x,y)$.
+\item On sait simuler $X=(X_1,\ldots,X_n)$ selon $\P(X_1,\ldots,X_n\vert Y_1, \ldots, Y_n)$ %ce qui donne par indépendance $\P_\theta(y_i \vert x_i)$, 
+  c'est à dire selon la loi conditionnelle à ce qui est observé.
+\item On initialise $\theta^0 = (\Pi_F^0, \Pi_G^0, m_F^0, m_G^0, (\sigma^0_F)^2, (\sigma_G^0)^2)$
+\item Pour passer de $\theta^q$ à $\theta^{q+1}$ :
+  \begin{itemize}
+    \item On tire $x_1^q, x_2^q, \ldots, x_n^q$ selon $\P_\theta^q(x_1 \vert y_1), \ldots, \P_\theta^q(x_n \vert y_n)$
+    \item On pose $\theta^{q+1} = \widehat{\theta}(x^q, y)$
+  \end{itemize}
+\end{enumerate}
+
+\begin{exo}
+  Soit $X_1,\ldots,X_n,Y_1,\ldots,Y_n$ chaîne de \textsc{Markov} cachée, avec 
+  \begin{itemize}
+    \item $X_i$ sont à valeurs dans $\{F,G\}$ et $Y_i$ à valeurs dans $\R$
+    \item $\P(X_k,X_{k+1})$ indépendante de $k$
+    \item $P(Y_k \vert X_k)$ gaussienne, indépendante de $k$
+  \end{itemize}
+  \begin{enumerate}
+      \item Donner les paramètres
+      \item Montrer, en utilisant les graphes, que $\P(X\vert Y)$ est de \textsc{Markov}
+      \item Peut-on appliquer le SEM ?
+  \end{enumerate}
+\end{exo}
+
+\begin{enumerate}
+  \item Tout d'abord, on a grâce à la première propriété $\P(X_k)$ indépendante de $k$. Ainsi, on en déduit que
+
+    \[ \P(X_{k+1} \vert X_k) = \frac{\P(X_k,X_{k+1})}{\P(X_k)} = \frac{\P(X_1, X_2)}{\P(X_1)} \]
+
+    On a alors comme paramètre $\theta=(\Pi_{FF}, \Pi_{FG}, \Pi_{GF}, \Pi_{GG}, m_F, m_G, \sigma_F^2, \sigma_G^2)$
+  \item Si on condtionne par rapport aux $y_k$, on casse les segments partant des $y$ (schéma $y$ et $x$ sous forme de peigne). On a alors uniquement un segment passant pour tous les $x_k$.
+  \item Oui, on peut trouver des estimateurs pour les paramètres. Par exemple, $\widehat{\Pi}_{FF}(\underbrace{x_1,\ldots,x_n}_{x},\underbrace{y_1,\ldots,y_n}_{y}) = \frac{1}{n-1} \sum_{i=1}^{n-1} \mathbbm{1}_{[x_i=F,x_{i+1} = F]}$ (remarque : il y a n-1 couples, d'où le n-1 au numérateur). \\
+    Pour la deuxième propriété, il faut arriver à simuler la chaine. Il nous faut la loi de $X_1$ conditionnellement aux $Y_k$ puis les transitions conditionnellement aux $Y_k$. On a :
+    \[ \P(X_1 \vert Y_1,\ldots,Y_n) = \frac{\alpha_1(X_1)\beta_1(X_1)}{\sum_{x_i} \alpha_i(X_i) \beta_i(X_i)} \]
+
+    Ensuite, pour par exemple $X_3$ et $X_4$
+    \begin{equation*}
+    \begin{split}
+      \P(X_3,X_4, Y_1,\ldots,Y_3,Y_4,\ldots,Y_N ) &= \P(X_4, Y_{4:n} |Vert X_3, Y_{1:3}) \P(X_3, Y_{1:3}) \\
+      &= \P(X_3,Y_{1:3} ) \P(X_4, Y_{4:n} \vert X_3) \\
+      &= \P(X_3,Y_{1:3}) \P(X_4 \vert X_3) \P(Y_{4:n} \vert X_4)
+    \end{split}
+    \end{equation*}
+\end{enumerate}
 
 \end{document}

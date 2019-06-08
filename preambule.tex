@@ -33,6 +33,7 @@
 %\usepackage{sistyle}
 \usepackage[nottoc, notlof, notlot]{tocbibind}
 \usepackage{subcaption}
+\usepackage{bbm} % Pour avoir une fonction indicatrice \mathbbm{1}
 %Utilisez le package tocbibind, capable de créer des entrées pour la bibliographie, l'index et aussi la table des matières (!), les listes des figures et des tables. Ces trois derniers éléments n'étant pas du meilleur effet, on lui pourra passer les options nottoc, notlof et notlot.
 
 %\usepackage[square,numbers,sort&compress]{natbib}
@@ -47,7 +48,8 @@
 \geometry{hmargin=1.3cm,top=1.9cm,bottom=1.9cm}
 
 \newcommand{\der}{\mathrm{d}}
-\newcommand{\pitle}[1]{\ding{113} \textsc{#1}}
+\newcommand{\dps}{\displaystyle}
+\newcommand{\ptitle}[1]{\ding{113} \textsc{#1}}
 
 \newcommand{\kbt}{k_\mathrm{B}\mathrm{T}}
 \newcommand{\G}{\mathrm{G}}
@@ -56,7 +58,6 @@
 \newcommand{\K}{\mathrm{K}}
 \newcommand{\EI}{\mathrm{U}}
 \newcommand{\Entr}{\mathrm{S}}
-\newcommand{\V}{\mathrm{V}}
 \renewcommand{\S}{\mathrm{S}}
 \newcommand{\N}{\mathrm{N}}
 \newcommand{\Z}{\mathrm{Z}}
@@ -67,11 +68,16 @@
 \newcommand{\zun}{\mathrm{Z}_1}
 
 
-\newcommand{\R}{\mathcal{R}}
+\newcommand{\R}{\mathbb{R}}
 \newcommand{\Normale}{\mathcal{N}}
+\newcommand{\proj}{\mathrm{P}}
+\newcommand{\cov}{\mathrm{cov}}
+%\newcommand{\limsup}{\mathrm{limsup}}
 
 \renewcommand{\P}{\mathbb{P}}
 \newcommand{\E}{\mathbb{E}}
+\newcommand{\V}{\mathbb{V}}
+\newcommand{\Vect}{\mathrm{Vect}}
 \newcommand{\F}{\mathcal{F}}
 \newcommand{\B}{\mathcal{B}}
 
@@ -83,12 +89,20 @@
 \newcommand{\Voc}{\textbf{Vocabulaire : }}
 \newcommand{\Cor}{\textbf{Corollaire : }}
 \newcommand{\Th}{\textbf{Théorème : }}
+\newcommand{\Preuve}{\noindent{}\textbf{Preuve : }}
+
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+
 
 \newtheorem{definition}{Définition}[section]
 \newtheorem{prop}{Propriété}[section]
 \newtheorem{voc}{section}[section]
 \newtheorem{thm}{Théorème}[section]
 \newtheorem{cor}{Corollaire}[thm]
+\newtheorem{lem}{Lemme}[thm]
+\newtheorem{ex}{Exemple}[section]
+\newtheorem{exo}{Exercice}[section]
 %\setlength{\parindent}{0pt}
 \newcommand{\ud}{\mathrm{d}}
 
