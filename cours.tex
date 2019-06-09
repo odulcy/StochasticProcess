@@ -400,11 +400,12 @@ avec $X_{t_i^n}$ une variable aléatoire, $\F_{t_i^n}$ mesurable (où $\F_{t_i^n
 \ptitle{Etape 2} : Si $(X_t)_{0\leq t \leq T}$ un processus continu et borné alors pour construire $ \int_{0}^{T} X_s \der W_s$ on procède de la façon suivante :
 \begin{itemize}
   \item on introduit pour $n \geq 1$, $X_t^n = \sum_{k=0}^{n+1} X_{ \frac{kT}{n}} \mathbbm{1}_{[ \frac{kT}{n}, \frac{(k+1)T}{n} [}(t)$
-    \item on construit $M_T^n = \int_{0}^{T} W_s \der W_s$
-    \item On montre ensuite que $(M_T^n)_{n\geq 0}$ converge dans $\mathcal{L}^2$ vers une variable aléatoire $M_T$ : \\
+  \item on construit $M_T^n = \int_{0}^{T} X_s^n \der W_s$ (il s'agit de l'étape 1)
+    \item on montre ensuite que $(M_T^n)_{n\geq 0}$ converge dans $\mathcal{L}^2$ vers une variable aléatoire $M_T$ : \\
       $\E[(M_T^n - M_T)^2] \xrightarrow[n\to +\infty]{} 0$. On note alors $M_T = \int_{0}^{T} X_s \der W_s$
 \end{itemize}
 
+\vspace{0.4cm}
 Dans la suite de ce cours nous allons étudier (d'un point de vue numérique) les solutions d'EDS de la forme :
 \begin{equation*}
   \label{eq-eds}
