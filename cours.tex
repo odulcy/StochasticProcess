@@ -303,7 +303,7 @@ Finalement, on a bien $\proj_F(X)$ et $\proj_{F^\bot}(X)$ sont indépendants.
 \item $W_0 = 0$ 
 \item $(W_t)_{t>0}$ est un processus gaussien 
 \item Pour tout $(s,t)\in\R^2_+$, $W_t-W_s \sim \Normale(0,t-s)$ 
-\item Pour tout $(s,t) \in \R^2_+$, $s\leq t$, $W_t -W_s $ est indépendant de $\sigma((W_u)_{0\leq u \leq t})$ 
+\item Pour tout $(s,t) \in \R^2_+$, $s\leq t$, $W_t -W_s $ est indépendant de $\sigma((W_u)_{0\leq u \leq s})$ 
 \item La trajectoire $t \mapsto W_t$ est continue
 \end{itemize}
 
@@ -361,7 +361,7 @@ Or,
   \begin{itemize}
     \item $(W_{t+t_0} - W_{t_0})_{t>0}$ pour $t_0 \in \R_+$
     \item $(tW_{1/t})_{t>0}$
-    \item $(\alpha W_{1/t})_{t>0}$ pour $\alpha > 0$
+    \item $(\alpha W_{t/\alpha^2})_{t>0}$ pour $\alpha > 0$
   \end{itemize}
 \end{cor}
 
