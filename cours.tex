@@ -360,8 +360,8 @@ Or,
   Soit $(W_t)_{t>0}$ un mouvement brownien alors les processus suivants sont également des mouvements browniens
   \begin{itemize}
     \item $(W_{t+t_0} - W_{t_0})_{t>0}$ pour $t_0 \in \R_+$
-    \item $(tW_{1/t})_{t>0}$
-    \item $(\alpha W_{t/\alpha^2})_{t>0}$ pour $\alpha > 0$
+    \item $(tW_{1/t})_{t>0}$ (inversion du temps)
+    \item $(\alpha W_{t/\alpha^2})_{t>0}$ pour $\alpha > 0$ (propriété de stabilité, stable d'indice 2)
   \end{itemize}
 \end{cor}
 
@@ -373,8 +373,9 @@ Or,
   \end{itemize}
 \end{prop}
 
+Le théorème suivant établit la convergence en loi d'une marche aléatoire vers un processus stochastique gaussien. L'idée est d'interpoler la marche aléatoire $ \sum_{k=1}^{n} U_k$ de manière affine par morceaux. 
 \begin{thm}[Donsker]
-  Soit $(U_k)_{k\geq 0}$ une suite de variables aléatoires centrées i.i.d. et de carré intégrable avec $\sigma^2 = \V[U_1]$. Pour tout $t \in [0,1]$ et tout $n \leq 1$ on introduit $X_n(t) = \frac{1}{\sigma\sqrt{n}}\left(\sum_{k=1}^{\lfloor nt \rfloor} U_k + (nt - \lfloor nt \rfloor)U_{\lfloor nt \rfloor +1 }\right)$. Pour tout $n\leq 1$, $X_n = (X_n(t))_{0\leq t \leq 1}$ est un élement de $\mathcal{C}([0,1], \R)$ que l'on munit de la topologie induite pour la norme inférieure.
+  Soit $(U_k)_{k\geq 0}$ une suite de variables aléatoires centrées i.i.d. et de carré intégrable avec $\sigma^2 = \V[U_1]$. Pour tout $t \in [0,1]$ et tout $n \geq 1$ on introduit $X_n(t) = \frac{1}{\sigma\sqrt{n}}\left(\sum_{k=1}^{\lfloor nt \rfloor} U_k + (nt - \lfloor nt \rfloor)U_{\lfloor nt \rfloor +1 }\right)$. Pour tout $n\geq 1$, $X_n = (X_n(t))_{0\leq t \leq 1}$ est un élement de $\mathcal{C}([0,1], \R)$ que l'on munit de la topologie induite pour la norme inférieure.
 Alors,
   \[ X_n \xrightarrow[n\to +\infty]{\mathcal{L}} (W_t)_{0 \leq t \leq 1} \]
 \end{thm}
