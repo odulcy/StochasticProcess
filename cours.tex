@@ -558,7 +558,7 @@ Dans le cas de l'équation différentielle stochastique suivante :
 
 Soit $S_T - S_0 = \int_{0}^{T} \rho S_s \der s + \int_{0}^{T} \sigma S_s \der W_s$, on peut prouver dans ce cas que :
 
-\[ S_T = S_0 e^{\left(r- \frac{\sigma^2}{2}\right)T + \sigma W_T} \]
+\[ S_T = S_0 e^{\left(\rho- \frac{\sigma^2}{2}\right)T + \sigma W_T} \]
 
 En général, on s'intéresse ensuite à une quantité du type $\E[h(S_T)]$. Un choix standard : $h : x \mapsto (x-k)_+$ où $k>0$. Une approche très classique pour estimer $\E[h(S_T)]$ est d'utiliser une méthode de \textsc{Monte Carlo}. On simule $(S_t^i)_{1\leq i \leq N}$ indépendants et de même loi pour $N \geq 1$ et on estime $\E[h(s_T)]$ par $ \frac{1}{N} \sum_{i=1}^{N} h(S_t^i)$. Ici cela se résume à simuler $(W_T^i)_{1 \leq i \leq N}$ indépendants. Cette approche est justifiée par 
 
@@ -588,7 +588,7 @@ alors il y a unicité de processus $(X_t)_{0 \leq t \leq T}$ s'écrivent :
 
 \subsection{Approximations d'Euler}
 
-Pour écrire l'approximation d'\textsc{Euler}, on introduit une discrétisation de l'interalle $[0,T]$ : $\left( t_k^n = \frac{kT}{N} \right)_{0 \leq k \leq n}$ et pour simuler $(Y_t)_{t \in [0,T]}$ aux instants $(t_k^n)_{0 \leq k \leq n}$, on \og fige \fg{} les valeurs de $\sigma$ et de $b$ à ces instants.
+Pour écrire l'approximation d'\textsc{Euler}, on introduit une discrétisation de l'intervalle $[0,T]$ : $\left( t_k^n = \frac{kT}{N} \right)_{0 \leq k \leq n}$ et pour simuler $(Y_t)_{t \in [0,T]}$ aux instants $(t_k^n)_{0 \leq k \leq n}$, on \og fige \fg{} les valeurs de $\sigma$ et de $b$ à ces instants.
 
 Entre $t_k^n$ et $t_{k+1}^n$ pour $0 \leq k \leq n-1$, on approche \eqref{EDS-discr} par $\der \widetilde{X_t} = b(X_{t_k^n}) \der t + \sigma(X_{t_k^n}) \der W_t$. On a alors 
 
@@ -600,7 +600,7 @@ Entre $t_k^n$ et $t_{k+1}^n$ pour $0 \leq k \leq n-1$, on approche \eqref{EDS-di
   \]
 
   où $\left(\varepsilon_k\right)_{1 \leq k \leq n}$ sont i.i.d., de loi $\Normale(0,1)$.
-  Cette approximation de $(X_{t_k^n},\ldots,X_T)$ est appelée approxmation d'\textsc{Euler} à pas constant.
+  Cette approximation de $(X_{t_k^n},\ldots,X_T)$ est appelée approxmation d'\textsc{Euler} à pas constant. \\
 
   On peut introduire une approximation d'\textsc{Euler} continue de la façon suivante :
   \[
@@ -1062,10 +1062,10 @@ Ainsi,
 \begin{equation*}
 \begin{split}
   \P(\st \geq b; \wt \leq a) &= \P(\tau_b \leq t ; Z_{_t-\tau_b} \leq a-b) \\
-  &= \P(\tau_b \leq t; - Z_{t- \tau_b \leq a-b}) \text{ (car événements indép. et symétrie de la gaussienne centré)} \\
+  &= \P(\tau_b \leq t; - Z_{t- \tau_b} \leq a-b) \text{ (car symétrie de la gaussienne centré)} \\
   &= \P(\tau_b \leq t; - \wt \leq a - 2b) \\
   &= \P(\tau_b \leq t; \wt \geq 2b-a)  \\
-  &= \P(\wt \geq 2b-a) \text{ car } \{ \wt \geq 2b-a \} \subset \{ Z_b \leq t \} \text{ lorsque } a \leq b
+  &= \P(\wt \geq 2b-a) \text{ car } \{ \wt \geq 2b-a \} \text{ implique } \{ \tau_b \leq t \} \text{ lorsque } a \leq b
 \end{split}
 \end{equation*}
 
@@ -1073,9 +1073,10 @@ Ensuite, pour tout $b\geq 0$,
 
 \begin{equation*}
 \begin{split}
-  \P(\st \geq b) &= \P(\st \geq b; \wt \geq b) + \P(\st \leq b; \wt \leq b) \\
+  \P(\st \geq b) &= \P(\st \geq b; \wt \geq b) + \P(\st \geq b; \wt \leq b) \\
   &= \P(\wt \geq b) + \P(\wt \geq 2b-b) \\
-  &= \P\wt \geq b) + \P(- \wt \geq b) \\
+  &= \P(\wt \geq b) + \P(\wt \geq b) \\
+  &= 2\P(\wt \geq b) \text{ ou encore peut être vu comme }  \P(\wt \geq b) + \P(-\wt \geq b) \\
   &= \P(\vert \wt \vert \geq b)
 \end{split}
 \end{equation*}
@@ -1090,7 +1091,7 @@ Soit $t \geq 0$,
   &= \P((\wt-W_0)^2 \geq b^2) 
 \end{split}
 \end{equation*}
-Or, $\wt - W_0 \sim \Normale(O,t)$ donc $\sqrt{t}(W_1 - W_0) \overset{\mathcal{L}}{=} \wt - W_0$.
+Or, $\wt - W_0 \sim \Normale(0,t)$ donc $\sqrt{t}(W_1 - W_0) \overset{\mathcal{L}}{=} \wt - W_0$.
 D'où,
 \begin{equation*}
 \begin{split}
@@ -1099,11 +1100,11 @@ D'où,
 \end{split}
 \end{equation*}
 
-On cherche à calculer $\dps \frac{\partial}{\partial t}\left(\P(W_1^2 \geq \frac{b^2}{t} \right)$.
+On cherche à calculer $\dps \frac{\partial}{\partial t}\left(\P\left(W_1^2 \geq \frac{b^2}{t} \right)\right)$.
 
 \begin{equation*}
 \begin{split}
-  \frac{\partial}{\partial t}\left(\P(W_1^2 \geq \frac{b^2}{t} \right) &= \frac{\partial}{\partial t} \int_{ \frac{b^2}{t}}^{+\infty} f_{W_1^2}(u) \der u \\
+  \frac{\partial}{\partial t}\left(\P\left(W_1^2 \geq \frac{b^2}{t} \right)\right) &= \frac{\partial}{\partial t} \int_{ \frac{b^2}{t}}^{+\infty} f_{W_1^2}(u) \der u \\
   &= \frac{2}{\sqrt{2\pi}} \frac{\partial}{\partial t} \int_{ \frac{b^2}{t}}^{+\infty} e^{- \frac{x^2}{2}} \der x \\
   &= \frac{1}{\sqrt{2\pi}} e^{ - \frac{b^2}{2t}} b t^{-3/2}
 \end{split}
@@ -1124,7 +1125,7 @@ On cherche à calculer $\dps \frac{\partial}{\partial t}\left(\P(W_1^2 \geq \fra
 \end{split}
 \end{equation*}
 
-\item $\P(Z \geq y) = e^{- \frac{2y}{t}(y-x)}$ pour $y \geq 0 \forall x$. La fonction de répartition de $Z$ est donnée par $F_Z(y) = \P(Z \leq y ) - 1 - e^{- \frac{2y}{t}(y-x)}$. Alors si $U \sim \mathcal{U}([0,1])$, $F_Z^{-1}(u)$ a la même loi que $Z$.
+\item $\P(Z \geq y) = e^{- \frac{2y}{t}(y-x)}$ pour $y \geq 0, \,\forall x$. La fonction de répartition de $Z$ est donnée par $F_Z(y) = \P(Z \leq y ) = 1 - e^{- \frac{2y}{t}(y-x)}$. Alors si $U \sim \mathcal{U}([0,1])$, $F_Z^{-1}(U)$ a la même loi que $Z$.
 \end{enumerate}
 
 \section{Exercices supplémentaires}
@@ -1191,7 +1192,7 @@ et
   \begin{equation*}
   \begin{split}
     \E[\xt] &= e^{A_t}\E[Y_t] \\
-    &= e^{A_t}( \E[X_0] + \underbrace{\E\left[ \int_{0}^{t} e^{-A_s} b_s \der s\right]}_{\text{espérance d'une constante}} + \underbrace{\E\left[ \int_{0}^{t} e^{-A_s} c_s \der \ws\right]}_{0} \\
+    &= e^{A_t}( \E[X_0] + \underbrace{\E\left[ \int_{0}^{t} e^{-A_s} b_s \der s\right]}_{\text{espérance d'une constante}} + \underbrace{\E\left[ \int_{0}^{t} e^{-A_s} c_s \der \ws\right]}_{0 \text{ car } \int \text{ d'une fonction du temps par rapport au brownien est tjrs nulle}} \\
     &= e^{A_t}\left(\E[X_0] + \int_{0}^{t} e^{-A_s} b_s \der s\right)
   \end{split}
   \end{equation*}
@@ -1201,8 +1202,10 @@ et
   \newcommand{\td}{t_2}
   \begin{equation*}
   \begin{split} 
-    \cov(X_{\tu}, X_{\td}) &= \cov \left( \int_{0}^{\tu} e^{A_{\tu} -A_s}c_s \der \ws, \int_{0}^{\td} e^{A_{\td} - A_s} \right) \\
-    &= sqfdfd
+    \cov(X_{\tu}, X_{\td}) &= \cov \left( \int_{0}^{\tu} e^{A_{\tu} -A_s}c_s \der \ws, \int_{0}^{\td} e^{A_{\td} - A_s} c_s \der \ws \right) \\
+    &= \cov \left( \int_{0}^{+\infty} e^{A_{\tu}-A_s} c_s \mathbbm{1}_{s\leq \tu} \der \ws, \int_{0}^{+\infty} e^{A_{\td}-A_s} c_s \mathbbm{1}_{s\leq \td} \der \ws\right) \\
+    &= \int_{0}^{+\infty} \left( e^{A_{\tu}-A_s} c_s \mathbbm{1}_{s \leq \tu} \right) \left( e^{A_{\td}-A_s} c_s \mathbbm{1}_{s \leq \td} \right) \der s \text{ par l'isométrie d'\textsc{Itô}} \\
+    &= \int_{0}^{\tu \wedge \td} e^{A_{\tu} + A_{\td} - 2 A_s} c_s^2 \der s
   \end{split}
   \end{equation*}
 
